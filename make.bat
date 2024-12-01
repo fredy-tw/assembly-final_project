@@ -5,11 +5,11 @@ REM Uses MicroSoft Macro Assembler version 6.11 and 32-bit Incremental Linker ve
 REM Created by Huang 
 
 REM delete related files
-REM 	del helloworld.lst
-REM 	del helloworld.obj
-REM 	del helloworld.ilk
-REM 	del helloworld.pdb
-REM 	del helloworld.exe
+REM 	del tetris.lst
+REM 	del tetris.obj
+REM 	del tetris.ilk
+REM 	del tetris.pdb
+REM 	del tetris.exe
 
 
 REM /c          assemble without linking
@@ -18,7 +18,7 @@ REM /Zi         generate symbolic debugging information for WinDBG
 REM /Fl		Generate a listing file
  
 
-ML /c /coff /Zi   helloworld.asm
+ML /c /coff /Zi   tetris.asm
 if errorlevel 1 goto terminate
 
 REM /debug              generate symbolic debugging information
@@ -32,11 +32,11 @@ REM Kernel32.lib        library procedures to be invoked from the program
 REM irvine32.lib
 REM user32.lib
 
-LINK /INCREMENTAL:no /debug /subsystem:console /entry:start /out:helloworld.exe helloworld.obj Kernel32.lib irvine32.lib user32.lib
+LINK /INCREMENTAL:no /debug /subsystem:console /entry:start /out:tetris.exe tetris.obj Kernel32.lib irvine32.lib user32.lib
 if errorlevel 1 goto terminate
 
 REM Display all files related to this program:
-DIR helloworld.*
+DIR tetris.*
 
 :terminate
 pause
