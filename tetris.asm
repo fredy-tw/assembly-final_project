@@ -2,6 +2,12 @@ INCLUDE Irvine32.inc
 main          EQU start@0
 Drawplayer PROTO,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte,paint:byte
 Rotate_block PROTO,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte
+Rotate_I PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_S PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_T PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_J PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_Z PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_L PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte
 Draw PROTO
 .data
 xpos_1 BYTE 4
@@ -36,35 +42,35 @@ Generate_block PROC
 Generate_block ENDP
 Rotate_block PROC,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte
     .IF block_type=='I'
-        call Rotate_I,player,xpos,ypos,direction
+        invoke Rotate_I,player,xpos,ypos,direction
     .ENDIF
     .IF block_type=='S'
-        call Rotate_S,player,xpos,ypos,direction
+        invoke Rotate_S,player,xpos,ypos,direction
     .ENDIF
     .IF block_type=='Z'
-        call Rotate_Z,player,xpos,ypos,direction
+        invoke Rotate_Z,player,xpos,ypos,direction
     .ENDIF
     .IF block_type=='T'
-        call Rotate_T,player,xpos,ypos,direction
+        invoke Rotate_T,player,xpos,ypos,direction
     .ENDIF
     .IF block_type=='J'
-        call Rotate_J,player,xpos,ypos,direction
+        invoke Rotate_J,player,xpos,ypos,direction
     .ENDIF
     .IF block_type=='L'
-        call Rotate_L,player,xpos,ypos,direction
+        invoke Rotate_L,player,xpos,ypos,direction
     .ENDIF
 Rotate_block ENDP
-Rotate_I PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_I PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte
 Rotate_I ENDP
-Rotate_S PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_S PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte
 Rotate_S ENDP
-Rotate_Z PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_Z PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte
 Rotate_Z ENDP
-Rotate_T PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_T PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte
 Rotate_T ENDP
-Rotate_J PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_J PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte
 Rotate_J ENDP
-Rotate_L PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_L PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte
 Rotate_L ENDP
 Drawplayer PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte,paint:byte;程把计ㄏи∕﹚礶ぐ或よ遏
     mov edx,player
