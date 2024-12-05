@@ -24,7 +24,7 @@ main PROC
     gameloop:
     .IF player_1==1
     .ENDIF
-    invoke Drawplayer,OFFSET [player_1] ,'J' ,xpos_1 ,ypos_1,4,'X'
+    invoke Drawplayer,OFFSET [player_1] ,'I' ,xpos_1 ,ypos_1,1,'X'
     ; invoke Drawplayer,OFFSET [player_1] ,'O' ,xpos_1 ,ypos_1,1,'x'
     invoke Draw
     call ReadChar
@@ -35,14 +35,37 @@ main ENDP
 Generate_block PROC
 Generate_block ENDP
 Rotate_block PROC,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte
-    mov edx,player
-    mov eax,0
-    mov al,ypos
-    mov bl,11
-    mul bl
-    add al,xpos
-    add edx,eax
+    .IF block_type=='I'
+        call Rotate_I,player,xpos,ypos,direction
+    .ENDIF
+    .IF block_type=='S'
+        call Rotate_S,player,xpos,ypos,direction
+    .ENDIF
+    .IF block_type=='Z'
+        call Rotate_Z,player,xpos,ypos,direction
+    .ENDIF
+    .IF block_type=='T'
+        call Rotate_T,player,xpos,ypos,direction
+    .ENDIF
+    .IF block_type=='J'
+        call Rotate_J,player,xpos,ypos,direction
+    .ENDIF
+    .IF block_type=='L'
+        call Rotate_L,player,xpos,ypos,direction
+    .ENDIF
 Rotate_block ENDP
+Rotate_I PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_I ENDP
+Rotate_S PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_S ENDP
+Rotate_Z PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_Z ENDP
+Rotate_T PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_T ENDP
+Rotate_J PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_J ENDP
+Rotate_L PROC,player PTR byte,xpos:byte,ypos:byte,direction:byte
+Rotate_L ENDP
 Drawplayer PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte,paint:byte;程把计ㄏи∕﹚礶ぐ或よ遏
     mov edx,player
     mov eax,0
@@ -53,15 +76,45 @@ Drawplayer PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, directio
     add edx,eax
     mov al,paint
     .IF block_type=='I' ;not good 
-        .IF direction==1 ;left center 2
+        .IF direction==1 
+            dec edx
+            mov BYTE PTR [edx],al
+            inc edx
+            mov BYTE PTR [edx],al 
+            inc edx
+            mov BYTE PTR [edx],al
+            inc edx
+            mov BYTE PTR [edx],al
         .ENDIF
-        .IF direction==2  ;up 2
+        .IF direction==2 
+            sub edx,11
+            mov BYTE PTR [edx],al 
+            add edx,11
+            mov BYTE PTR [edx],al
+            add edx,11
+            mov BYTE PTR [edx],al
+            add edx,11
+            mov BYTE PTR [edx],al
         .ENDIF
-        .IF direction==3 ;right 2
-
+        .IF direction==3 
+            sub edx,2
+            mov BYTE PTR [edx],al
+            inc edx
+            mov BYTE PTR [edx],al
+            inc edx
+            mov BYTE PTR [edx],al
+            inc edx
+            mov BYTE PTR [edx],al
         .ENDIF
-        .IF direction==4 ;down 2
-
+        .IF direction==4
+            sub edx,22
+            mov BYTE PTR [edx],al
+            add edx,11
+            mov BYTE PTR [edx],al
+            add edx,11
+            mov BYTE PTR [edx],al
+            add edx,11
+            mov BYTE PTR [edx],al
         .ENDIF
     .ENDIF
     .IF block_type=='O' ; good
