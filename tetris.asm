@@ -1,7 +1,7 @@
 INCLUDE Irvine32.inc
 main          EQU start@0
 Drawplayer PROTO,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte,paint:byte
-Rotate_block PROTO,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte
+Rotate_block PROTO,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte,lr:byte 
 Rotate_I PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
 Rotate_S PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
 Rotate_T PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
@@ -339,7 +339,7 @@ Draw PROC
         loop L
     call ReadChar
 Draw ENDP
-Rotate_block PROC,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte,,lr:byte
+Rotate_block PROC,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte,lr:byte
     .IF block_type=='I'
         invoke Rotate_I,player,xpos,ypos,direction,lr
     .ENDIF
@@ -362,192 +362,192 @@ Rotate_block ENDP
 Rotate_I PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
     .IF lr=='r'
         .IF direction=='1'
-            1rtest1:
+            _1rtest1:
 
-            1rtest2:
+            _1rtest2:
             
-            1rtest3:
+            _1rtest3:
 
-            1rtest4:
+            _1rtest4:
 
-            1rtest5:
+            _1rtest5:
 
         .ENDIF
         .IF direction=='2'
-            2rtest1:
+            _2rtest1:
 
-            2rtest2:
+            _2rtest2:
 
-            2rtest3:
+            _2rtest3:
 
-            2rtest4:
+            _2rtest4:
 
-            2rtest5:
+            _2rtest5:
         .ENDIF
         .IF direction=='3'
-            3rtest1:
+            _3rtest1:
 
-            3rtest2:
+            _3rtest2:
 
-            3rtest3:
+            _3rtest3:
 
-            3rtest4:
+            _3rtest4:
 
-            3rtest5:
+            _3rtest5:
         .ENDIF
         .IF direction=='4'
-            4rtest1:
+            _4rtest1:
 
-            4rtest2:
+            _4rtest2:
 
-            4rtest3:
+            _4rtest3:
 
-            4rtest4:
+            _4rtest4:
 
-            4rtest5
+            _4rtest5:
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction=='1'
-            1ltest1:
+            _1ltest1:
 
-            1ltest2:
+            _1ltest2:
             
-            1ltest3:
+            _1ltest3:
 
-            1ltest4:
+            _1ltest4:
 
-            1ltest5:
+            _1ltest5:
 
         .ENDIF
         .IF direction=='2'
-            2ltest1:
+            _2ltest1:
 
-            2ltest2:
+            _2ltest2:
 
-            2ltest3:
+            _2ltest3:
 
-            2ltest4:
+            _2ltest4:
 
-            2ltest5:
+            _2ltest5:
         .ENDIF
         .IF direction=='3'
-            3ltest1:
+            _3ltest1:
 
-            3ltest2:
+            _3ltest2:
 
-            3ltest3:
+            _3ltest3:
 
-            3ltest4:
+            _3ltest4:
 
-            3ltest5:
+            _3ltest5:
         .ENDIF
         .IF direction=='4'
-            4ltest1:
+            _4ltest1:
 
-            4ltest2:
+            _4ltest2:
 
-            4ltest3:
+            _4ltest3:
 
-            4ltest4:
+            _4ltest4:
 
-            4ltest5
+            _4ltest5:
         .ENDIF
     .ENDIF
 Rotate_I ENDP
 Rotate_S PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
     .IF lr=='r'
         .IF direction=='1'
-            1rtest1:
+            _1rtest1:
 
-            1rtest2:
+            _1rtest2:
             
-            1rtest3:
+            _1rtest3:
 
-            1rtest4:
+            _1rtest4:
 
-            1rtest5:
+            _1rtest5:
 
         .ENDIF
         .IF direction=='2'
-            2rtest1:
+            _2rtest1:
 
-            2rtest2:
+            _2rtest2:
 
-            2rtest3:
+            _2rtest3:
 
-            2rtest4:
+            _2rtest4:
 
-            2rtest5:
+            _2rtest5:
         .ENDIF
         .IF direction=='3'
-            3rtest1:
+            _3rtest1:
 
-            3rtest2:
+            _3rtest2:
 
-            3rtest3:
+            _3rtest3:
 
-            3rtest4:
+            _3rtest4:
 
-            3rtest5:
+            _3rtest5:
         .ENDIF
         .IF direction=='4'
-            4rtest1:
+            _4rtest1:
 
-            4rtest2:
+            _4rtest2:
 
-            4rtest3:
+            _4rtest3:
 
-            4rtest4:
+            _4rtest4:
 
-            4rtest5
+            _4rtest5:
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction=='1'
-            1ltest1:
+            _1ltest1:
 
-            1ltest2:
+            _1ltest2:
             
-            1ltest3:
+            _1ltest3:
 
-            1ltest4:
+            _1ltest4:
 
-            1ltest5:
+            _1ltest5:
 
         .ENDIF
         .IF direction=='2'
-            2ltest1:
+            _2ltest1:
 
-            2ltest2:
+            _2ltest2:
 
-            2ltest3:
+            _2ltest3:
 
-            2ltest4:
+            _2ltest4:
 
-            2ltest5:
+            _2ltest5:
         .ENDIF
         .IF direction=='3'
-            3ltest1:
+            _3ltest1:
 
-            3ltest2:
+            _3ltest2:
 
-            3ltest3:
+            _3ltest3:
 
-            3ltest4:
+            _3ltest4:
 
-            3ltest5:
+            _3ltest5:
         .ENDIF
         .IF direction=='4'
-            4ltest1:
+            _4ltest1:
 
-            4ltest2:
+            _4ltest2:
 
-            4ltest3:
+            _4ltest3:
 
-            4ltest4:
+            _4ltest4:
 
-            4ltest5
+            _4ltest5:
         .ENDIF
     .ENDIF
 Rotate_S ENDP
@@ -562,423 +562,423 @@ Rotate_Z PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:Byte
     mov eax,edx; to preserve the center we got now
     .IF lr=='r'
         .IF direction=='1'
-            1rtest1:
+            _1rtest1:
                 sub edx,10
-                cmp [edx],'.'
-                jne 1rtest2                
-                add edx,10
-                cmp [edx],'.'
-                jne 1rtest2     
+                ;cmp [edx],'.'
+                ;jne 1rtest2                
+                ;add edx,10
+                ;cmp [edx],'.'
+                ;jne 1rtest2     
                 inc edx
-                cmp [edx],'.'
-                jne 1rtest2     
+                ;cmp [edx],'.'
+                ;jne 1rtest2     
                 add edx,10
-                cmp [edx],'.'
-                jne 1rtest2     
+                ;cmp [edx],'.'
+                ;jne 1rtest2     
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 mov direction,'2'
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
                 ret
-            1rtest2:
+            _1rtest2:
                 sub edx,11
-                cmp [edx],'.'
-                jne 1rtest3
+                ;cmp [edx],'.'
+                ;jne 1rtest3
                 add edx,10
-                cmp [edx],'.'
-                jne 1rtest2   
+                ;cmp [edx],'.'
+                ;jne 1rtest2   
                 inc edx
-                cmp [edx],'.'
-                jne 1rtest2   
+                ;cmp [edx],'.'
+                ;jne 1rtest2   
                 add edx,10
-                cmp [edx],'.'
-                jne 1rtest2      
+                ;cmp [edx],'.'
+                ;jne 1rtest2      
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
-                sub xpos
+                dec xpos
                 mov direction,'2'
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
-            1rtest3:
+            _1rtest3:
                 
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 mov direction,'2'
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
-            1rtest4:
+            _1rtest4:
 
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 mov direction,'2'
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
-            1rtest5:
+            _1rtest5:
 
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 mov direction,'2'
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
         .ENDIF
         .IF direction=='2'
-            2rtest1:
+            _2rtest1:
 
-            2rtest2:
+            _2rtest2:
 
-            2rtest3:
+            _2rtest3:
 
-            2rtest4:
+            _2rtest4:
 
-            2rtest5:
+            _2rtest5:
         .ENDIF
         .IF direction=='3'
-            3rtest1:
+            _3rtest1:
 
-            3rtest2:
+            _3rtest2:
 
-            3rtest3:
+            _3rtest3:
 
-            3rtest4:
+            _3rtest4:
 
-            3rtest5:
+            _3rtest5:
         .ENDIF
         .IF direction=='4'
-            4rtest1:
+            _4rtest1:
 
-            4rtest2:
+            _4rtest2:
 
-            4rtest3:
+            _4rtest3:
 
-            4rtest4:
+            _4rtest4:
 
-            4rtest5
+            _4rtest5:
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction=='1'
-            1ltest1:
+            _1ltest1:
 
-            1ltest2:
+            _1ltest2:
             
-            1ltest3:
+            _1ltest3:
 
-            1ltest4:
+            _1ltest4:
 
-            1ltest5:
+            _1ltest5:
 
         .ENDIF
         .IF direction=='2'
-            2ltest1:
+            _2ltest1:
 
-            2ltest2:
+            _2ltest2:
 
-            2ltest3:
+            _2ltest3:
 
-            2ltest4:
+            _2ltest4:
 
-            2ltest5:
+            _2ltest5:
         .ENDIF
         .IF direction=='3'
-            3ltest1:
+            _3ltest1:
 
-            3ltest2:
+            _3ltest2:
 
-            3ltest3:
+            _3ltest3:
 
-            3ltest4:
+            _3ltest4:
 
-            3ltest5:
+            _3ltest5:
         .ENDIF
         .IF direction=='4'
-            4ltest1:
+            _4ltest1:
 
-            4ltest2:
+            _4ltest2:
 
-            4ltest3:
+            _4ltest3:
 
-            4ltest4:
+            _4ltest4:
 
-            4ltest5
+            _4ltest5:
         .ENDIF
     .ENDIF
 Rotate_Z ENDP
 Rotate_T PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
     .IF lr=='r'
         .IF direction=='1'
-            1rtest1:
+            _1rtest1:
 
-            1rtest2:
+            _1rtest2:
             
-            1rtest3:
+            _1rtest3:
 
-            1rtest4:
+            _1rtest4:
 
-            1rtest5:
+            _1rtest5:
 
         .ENDIF
         .IF direction=='2'
-            2rtest1:
+            _2rtest1:
 
-            2rtest2:
+            _2rtest2:
 
-            2rtest3:
+            _2rtest3:
 
-            2rtest4:
+            _2rtest4:
 
-            2rtest5:
+            _2rtest5:
         .ENDIF
         .IF direction=='3'
-            3rtest1:
+            _3rtest1:
 
-            3rtest2:
+            _3rtest2:
 
-            3rtest3:
+            _3rtest3:
 
-            3rtest4:
+            _3rtest4:
 
-            3rtest5:
+            _3rtest5:
         .ENDIF
         .IF direction=='4'
-            4rtest1:
+            _4rtest1:
 
-            4rtest2:
+            _4rtest2:
 
-            4rtest3:
+            _4rtest3:
 
-            4rtest4:
+            _4rtest4:
 
-            4rtest5
+            _4rtest5:
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction=='1'
-            1ltest1:
+            _1ltest1:
 
-            1ltest2:
+            _1ltest2:
             
-            1ltest3:
+            _1ltest3:
 
-            1ltest4:
+            _1ltest4:
 
-            1ltest5:
+            _1ltest5:
 
         .ENDIF
         .IF direction=='2'
-            2ltest1:
+            _2ltest1:
 
-            2ltest2:
+            _2ltest2:
 
-            2ltest3:
+            _2ltest3:
 
-            2ltest4:
+            _2ltest4:
 
-            2ltest5:
+            _2ltest5:
         .ENDIF
         .IF direction=='3'
-            3ltest1:
+            _3ltest1:
 
-            3ltest2:
+            _3ltest2:
 
-            3ltest3:
+            _3ltest3:
 
-            3ltest4:
+            _3ltest4:
 
-            3ltest5:
+            _3ltest5:
         .ENDIF
         .IF direction=='4'
-            4ltest1:
+            _4ltest1:
 
-            4ltest2:
+            _4ltest2:
 
-            4ltest3:
+            _4ltest3:
 
-            4ltest4:
+            _4ltest4:
 
-            4ltest5
+            _4ltest5:
         .ENDIF
     .ENDIF
 Rotate_T ENDP
 Rotate_J PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
     .IF lr=='r'
         .IF direction=='1'
-            1rtest1:
+            _1rtest1:
 
-            1rtest2:
+            _1rtest2:
             
-            1rtest3:
+            _1rtest3:
 
-            1rtest4:
+            _1rtest4:
 
-            1rtest5:
+            _1rtest5:
 
         .ENDIF
         .IF direction=='2'
-            2rtest1:
+            _2rtest1:
 
-            2rtest2:
+            _2rtest2:
 
-            2rtest3:
+            _2rtest3:
 
-            2rtest4:
+            _2rtest4:
 
-            2rtest5:
+            _2rtest5:
         .ENDIF
         .IF direction=='3'
-            3rtest1:
+            _3rtest1:
 
-            3rtest2:
+            _3rtest2:
 
-            3rtest3:
+            _3rtest3:
 
-            3rtest4:
+            _3rtest4:
 
-            3rtest5:
+            _3rtest5:
         .ENDIF
         .IF direction=='4'
-            4rtest1:
+            _4rtest1:
 
-            4rtest2:
+            _4rtest2:
 
-            4rtest3:
+            _4rtest3:
 
-            4rtest4:
+            _4rtest4:
 
-            4rtest5
+            _4rtest5:
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction=='1'
-            1ltest1:
+            _1ltest1:
 
-            1ltest2:
+            _1ltest2:
             
-            1ltest3:
+            _1ltest3:
 
-            1ltest4:
+            _1ltest4:
 
-            1ltest5:
+            _1ltest5:
 
         .ENDIF
         .IF direction=='2'
-            2ltest1:
+            _2ltest1:
 
-            2ltest2:
+            _2ltest2:
 
-            2ltest3:
+            _2ltest3:
 
-            2ltest4:
+            _2ltest4:
 
-            2ltest5:
+            _2ltest5:
         .ENDIF
         .IF direction=='3'
-            3ltest1:
+            _3ltest1:
 
-            3ltest2:
+            _3ltest2:
 
-            3ltest3:
+            _3ltest3:
 
-            3ltest4:
+            _3ltest4:
 
-            3ltest5:
+            _3ltest5:
         .ENDIF
         .IF direction=='4'
-            4ltest1:
+            _4ltest1:
 
-            4ltest2:
+            _4ltest2:
 
-            4ltest3:
+            _4ltest3:
 
-            4ltest4:
+            _4ltest4:
 
-            4ltest5
+            _4ltest5:
         .ENDIF
     .ENDIF
 Rotate_J ENDP
 Rotate_L PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
     .IF lr=='r'
         .IF direction=='1'
-            1rtest1:
+            _1rtest1:
 
-            1rtest2:
+            _1rtest2:
             
-            1rtest3:
+            _1rtest3:
 
-            1rtest4:
+            _1rtest4:
 
-            1rtest5:
+            _1rtest5:
 
         .ENDIF
         .IF direction=='2'
-            2rtest1:
+            _2rtest1:
 
-            2rtest2:
+            _2rtest2:
 
-            2rtest3:
+            _2rtest3:
 
-            2rtest4:
+            _2rtest4:
 
-            2rtest5:
+            _2rtest5:
         .ENDIF
         .IF direction=='3'
-            3rtest1:
+            _3rtest1:
 
-            3rtest2:
+            _3rtest2:
 
-            3rtest3:
+            _3rtest3:
 
-            3rtest4:
+            _3rtest4:
 
-            3rtest5:
+            _3rtest5:
         .ENDIF
         .IF direction=='4'
-            4rtest1:
+            _4rtest1:
 
-            4rtest2:
+            _4rtest2:
 
-            4rtest3:
+            _4rtest3:
 
-            4rtest4:
+            _4rtest4:
 
-            4rtest5
+            _4rtest5:
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction=='1'
-            1ltest1:
+            _1ltest1:
 
-            1ltest2:
+            _1ltest2:
             
-            1ltest3:
+            _1ltest3:
 
-            1ltest4:
+            _1ltest4:
 
-            1ltest5:
+            _1ltest5:
 
         .ENDIF
         .IF direction=='2'
-            2ltest1:
+            _2ltest1:
 
-            2ltest2:
+            _2ltest2:
 
-            2ltest3:
+            _2ltest3:
 
-            2ltest4:
+            _2ltest4:
 
-            2ltest5:
+            _2ltest5:
         .ENDIF
         .IF direction=='3'
-            3ltest1:
+            _3ltest1:
 
-            3ltest2:
+            _3ltest2:
 
-            3ltest3:
+            _3ltest3:
 
-            3ltest4:
+            _3ltest4:
 
-            3ltest5:
+            _3ltest5:
         .ENDIF
         .IF direction=='4'
-            4ltest1:
+            _4ltest1:
 
-            4ltest2:
+            _4ltest2:
 
-            4ltest3:
+            _4ltest3:
 
-            4ltest4:
+            _4ltest4:
 
-            4ltest5
+            _4ltest5:
         .ENDIF
     .ENDIF
 Rotate_L ENDP
