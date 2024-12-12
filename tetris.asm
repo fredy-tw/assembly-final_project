@@ -8,6 +8,7 @@ Rotate_T PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
 Rotate_J PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
 Rotate_Z PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
 Rotate_L PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
+Collison_block PROTO,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte
 Draw PROTO
 .data
 xpos_1 BYTE 4
@@ -339,6 +340,429 @@ Draw PROC
         loop L
     call ReadChar
 Draw ENDP
+Collison_block PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte ; true if bl=1 false if bl=0
+    mov edx,player
+    mov eax,0
+    mov al,ypos
+    mov bl,11
+    mul bl
+    add al,xpos
+    add edx,eax
+    mov bl,1
+    .IF block_type=='I' ;not good 
+        .IF direction==1 
+            dec edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==2 
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==3 
+            sub edx,2
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==4
+            sub edx,22
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+    .ENDIF
+    .IF block_type=='O' ; good
+        cmp BYTE PTR [edx],'.'
+        jne collison
+        inc edx
+        cmp BYTE PTR [edx],'.'
+        jne collison
+        sub edx,11
+        cmp BYTE PTR [edx],'.'
+        jne collison
+        dec edx
+        cmp BYTE PTR [edx],'.'
+        jne collison
+        mov bl,1
+        ret
+    .ENDIF
+    .IF block_type=='T' ;good
+        .IF direction==1 ;face up
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==2  ;face right
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==3 ;face down
+            dec edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==4 ;face left
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+    .ENDIF
+    .IF block_type=='S' ;good
+        .IF direction==1 
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,9
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==2  
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==3
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,9
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==4
+            sub edx,12
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+    .ENDIF
+    .IF block_type=='Z' ;good
+        .IF direction==1 
+            sub edx,12
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==2  
+            sub edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==3
+            dec edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==4
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+    .ENDIF
+    .IF block_type=='L' ;good
+        .IF direction==1
+            sub edx,12
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==2  
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==3
+            dec edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==4
+            sub edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+    .ENDIF
+    .IF block_type=='J' ;good
+        .IF direction==1
+            sub edx,10
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,9
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.' 
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==2  
+            sub edx,11
+            cmp BYTE PTR [edx],'.' 
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.' 
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==3
+            dec edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,9
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+        .IF direction==4
+            sub edx,12
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            inc edx
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            cmp BYTE PTR [edx],'.'
+            jne collison
+            add edx,11
+            mov BYTE PTR [edx],'.'
+            jne collison
+            mov bl,1
+            ret
+        .ENDIF
+    .ENDIF
+    collison:
+    mov bl,0
+    ret
+Collison_block ENDP
 Rotate_block PROC,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte,lr:byte
     .IF block_type=='I'
         invoke Rotate_I,player,xpos,ypos,direction,lr
@@ -563,54 +987,92 @@ Rotate_Z PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:Byte
     .IF lr=='r'
         .IF direction=='1'
             _1rtest1:
+                mov edx,eax
                 sub edx,10
-                ;cmp [edx],'.'
-                ;jne 1rtest2                
-                ;add edx,10
-                ;cmp [edx],'.'
-                ;jne 1rtest2     
-                inc edx
-                ;cmp [edx],'.'
-                ;jne 1rtest2     
+                cmp byte ptr [edx], ',' 
+                jne _1rtest2                
                 add edx,10
-                ;cmp [edx],'.'
-                ;jne 1rtest2     
+                cmp byte ptr [edx], ',' 
+                jne _1rtest2     
+                inc edx
+                cmp byte ptr [edx], ',' 
+                jne _1rtest2     
+                add edx,10
+                cmp byte ptr [edx], ',' 
+                jne _1rtest2     
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 mov direction,'2'
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
                 ret
             _1rtest2:
+                mov edx,eax
                 sub edx,11
-                ;cmp [edx],'.'
-                ;jne 1rtest3
+                cmp byte ptr [edx], ',' 
+                jne _1rtest3
                 add edx,10
-                ;cmp [edx],'.'
-                ;jne 1rtest2   
+                cmp byte ptr [edx], ',' 
+                jne _1rtest3   
                 inc edx
-                ;cmp [edx],'.'
-                ;jne 1rtest2   
+                cmp byte ptr [edx], ',' 
+                jne _1rtest3   
                 add edx,10
-                ;cmp [edx],'.'
-                ;jne 1rtest2      
+                cmp byte ptr [edx], ',' 
+                jne _1rtest3      
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 dec xpos
                 mov direction,'2'
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                ret
             _1rtest3:
-                
+                mov edx,eax
+                sub edx,22
+                cmp byte ptr [edx],','
+                jne _1rtest4
+                add edx,10
+                cmp byte ptr [edx],','
+                jne _1rtest4
+                inc edx
+                cmp byte ptr [edx],','
+                jne _1rtest4
+                add edx,10 
+                cmp byte ptr [edx],','
+                jne _1rtest4
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 mov direction,'2'
+                dec xpos
+                dec ypos
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                ret
             _1rtest4:
-
+                cmp ypos,18
+                jg _dontmove
+                add edx,12
+                cmp byte ptr [edx],','
+                jne _1rtest5
+                add edx,10
+                cmp byte ptr [edx],','
+                jne _1rtest5
+                inc edx
+                cmp byte ptr [edx],','
+                jne _1rtest5
+                add edx,11
+                cmp byte ptr [edx],','
+                jne _1rtest5
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 mov direction,'2'
+                sub ypos,2
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                ret
             _1rtest5:
+                add edx,11
+                cmp byte ptr [edx],','
+                jne _dontmove
 
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
                 mov direction,'2'
                 invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                ret
+            _dontmove:
         .ENDIF
         .IF direction=='2'
             _2rtest1:
