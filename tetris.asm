@@ -33,7 +33,7 @@ main PROC
     gameloop:
     .IF player_1==1
     .ENDIF
-    invoke Drawplayer,OFFSET [player_1] ,'I' ,xpos_1 ,ypos_1,1,'X'
+    invoke Drawplayer,OFFSET [player_1] ,'I' ,xpos_1 ,ypos_1,'1','X'
     invoke Draw
     call ReadChar
     jmp gameloop
@@ -340,7 +340,7 @@ Draw PROC
         loop L
     call ReadChar
 Draw ENDP
-Collison_block PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte ; true if bl=1 false if bl=0
+Collison_block PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte ; 0 collide 1 safe to place
     mov edx,player
     mov eax,0
     mov al,ypos
@@ -976,109 +976,70 @@ Rotate_S PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
     .ENDIF
 Rotate_S ENDP
 Rotate_Z PROC,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:Byte
-    mov edx,player
-    mov eax,0
-    mov al,ypos
-    mov bl,11
-    mul bl
-    add al,xpos
-    add edx,eax
-    mov eax,edx; to preserve the center we got now
     .IF lr=='r'
         .IF direction=='1'
             _1rtest1:
-                mov edx,eax
-                sub edx,10
-                cmp byte ptr [edx], ',' 
-                jne _1rtest2                
-                add edx,10
-                cmp byte ptr [edx], ',' 
-                jne _1rtest2     
-                inc edx
-                cmp byte ptr [edx], ',' 
-                jne _1rtest2     
-                add edx,10
-                cmp byte ptr [edx], ',' 
-                jne _1rtest2     
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
+                invoke Collison_block,player,'Z',xpos,ypos,'2'
+                cmp bl,1
+                jne _1rtest2
+                invoke Drawplayer,player,'Z',xpos,ypos,'1','.' 
                 mov direction,'2'
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                invoke Drawplayer,player,'Z',xpos,ypos,direction,'X' 
                 ret
             _1rtest2:
-                mov edx,eax
-                sub edx,11
-                cmp byte ptr [edx], ',' 
+                invoke Collison_block,player,'Z',xpos-1,ypos,'2'
+                cmp bl,1
                 jne _1rtest3
-                add edx,10
-                cmp byte ptr [edx], ',' 
-                jne _1rtest3   
-                inc edx
-                cmp byte ptr [edx], ',' 
-                jne _1rtest3   
-                add edx,10
-                cmp byte ptr [edx], ',' 
-                jne _1rtest3      
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
+                invoke Drawplayer,player,'Z',xpos,ypos,'1','.' 
                 dec xpos
                 mov direction,'2'
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                invoke Drawplayer,player,'Z',xpos,ypos,direction,'X' 
                 ret
             _1rtest3:
-                mov edx,eax
-                sub edx,22
-                cmp byte ptr [edx],','
+                invoke Collison_block,player,'Z',xpos-1,ypos-1,'2'
+                cmp bl,1
                 jne _1rtest4
-                add edx,10
-                cmp byte ptr [edx],','
-                jne _1rtest4
-                inc edx
-                cmp byte ptr [edx],','
-                jne _1rtest4
-                add edx,10 
-                cmp byte ptr [edx],','
-                jne _1rtest4
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
+                invoke Drawplayer,player,'Z',xpos,ypos,'1','.' 
                 mov direction,'2'
                 dec xpos
                 dec ypos
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                invoke Drawplayer,player,'Z',xpos,ypos,direction,'X' 
                 ret
-            _1rtest4:
-                cmp ypos,18
+            _1rtest4:                
+                cmp ypos,19
                 jg _dontmove
-                add edx,12
-                cmp byte ptr [edx],','
+                invoke Collison_block,player,'Z',xpos,ypos+2,'2'
+                cmp bl,1
                 jne _1rtest5
-                add edx,10
-                cmp byte ptr [edx],','
-                jne _1rtest5
-                inc edx
-                cmp byte ptr [edx],','
-                jne _1rtest5
-                add edx,11
-                cmp byte ptr [edx],','
-                jne _1rtest5
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
+                invoke Drawplayer,player,'Z',xpos,ypos,'1','.' 
                 mov direction,'2'
-                sub ypos,2
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                add ypos,2
+                invoke Drawplayer,player,'Z',xpos,ypos,'1','X' 
                 ret
             _1rtest5:
-                add edx,11
-                cmp byte ptr [edx],','
+                invoke Collison_block,player,'Z',xpos-1,ypos+2,'2'
+                cmp bl,1
                 jne _dontmove
-
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'.' 
+                invoke Drawplayer,player,'Z',xpos,ypos,'1','.' 
                 mov direction,'2'
-                invoke Drawplayer,player,'Z',xpos,ypos,1,'X' 
+                invoke Drawplayer,player,'Z',xpos,ypos,'1','X' 
                 ret
             _dontmove:
+                ret
         .ENDIF
         .IF direction=='2'
             _2rtest1:
-
+                invoke Collison_block,player,'Z',xpos,ypos,'3'
+                cmp bl,1
+                jne _2rtest2
+                invoke Drawplayer,player,'Z',xpos,ypos,direction,'.'
+                mov direction,'3'
+                invoke Drawplayer,player,'Z',xpos,ypos,direction,'X'
+                ret
             _2rtest2:
-
+                cmp xpos,9
+                jg _2rtest3
+                invoke Collison_block,player,'Z',xpos+1,ypos,'3'
             _2rtest3:
 
             _2rtest4:
