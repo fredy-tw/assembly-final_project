@@ -27,7 +27,7 @@ inputChar BYTE ?
 isJumping BYTE ?
 block_type byte 'O';indicate what kind of block player is controling I O J L S Z T
 direction byte '1'
-player Byte 22 dup('..........',0);多出來的兩格是 給一開始方塊的位置
+player Byte 22 dup('..........',0),2 dup('xxxxxxxxxx',0);多出來的兩格是 給一開始方塊的位置
 hConsoleInput HANDLE 0
 input_buffer INPUT_RECORD 128 DUP(<>)
 input_number DWORD 0
@@ -41,7 +41,7 @@ main PROC
     invoke Drawplayer, 'X'
     invoke Draw
 gameloop:
-    invoke Sleep, 1000
+    invoke Sleep, 100
     invoke Drop_block, direction
     ;call ReadChar
     jmp gameloop
@@ -820,7 +820,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
         .ENDIF
     .ENDIF
 collison:
-    mov ypos, 10
+    ; mov ypos, 10
     mov bl,0
     ret
 Collison_block ENDP
@@ -833,9 +833,13 @@ Drop_block PROC,dir:byte
     ;je L1
     invoke Drawplayer,'.'
     inc ypos
+    invoke Collison_block,dir
+    cmp bl, 1
+    je L1
+    dec ypos
+    L1:
     invoke Drawplayer,'X'
     invoke Draw
-    ;L1:
     ret
 Drop_block ENDP
 Rotate_block PROC,lr:byte
@@ -857,6 +861,7 @@ Rotate_block PROC,lr:byte
     .IF block_type=='L'
         invoke Rotate_L,lr
     .ENDIF
+    ret
 Rotate_block ENDP
 Rotate_I PROC,lr:byte
     .IF lr=='r'
