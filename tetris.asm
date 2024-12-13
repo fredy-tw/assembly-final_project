@@ -38,17 +38,17 @@ main PROC
     mov hConsoleInput, eax
     ;mov eax,green+(blue*16) ;設定顏色 背景藍色 方塊可以隨便改
     ;call SetTextColor
-    gameloop:
     invoke Drawplayer, 'X'
     invoke Draw
-    invoke sleep, 2000
-    invoke Drop_block, '1'
-    invoke Draw
+gameloop:
+    invoke Sleep, 1000
+    invoke Drop_block, direction
     ;call ReadChar
     jmp gameloop
     ;call ReadChar
     exit
 main ENDP
+
 GetKeyboardInput PROC
     INVOKE GetNumberOfConsoleInputEvents, hConsoleInput, ADDR input_number
     cmp input_number, 0
@@ -399,6 +399,7 @@ Draw PROC
         inc dh
         loop L
     ;call ReadChar
+    ret
 Draw ENDP
 Collison_block PROC,dir:byte ; 0 collide 1 safe to place
     mov edx,OFFSET player
@@ -818,22 +819,24 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             ret
         .ENDIF
     .ENDIF
-    collison:
+collison:
+    mov ypos, 10
     mov bl,0
     ret
 Collison_block ENDP
-Drop_block PROC, dir:byte
-    inc ypos
+
+Drop_block PROC,dir:byte
+    ;inc ypos
     ;invoke Collison_block,dir
-    dec ypos
-    cmp bl, 0
-    je L1
+    ;dec ypos
+    ;cmp bl, 0
+    ;je L1
     invoke Drawplayer,'.'
-    invoke Draw
     inc ypos
     invoke Drawplayer,'X'
     invoke Draw
-    L1:
+    ;L1:
+    ret
 Drop_block ENDP
 Rotate_block PROC,lr:byte
     .IF block_type=='I'
@@ -1663,5 +1666,7 @@ Rotate_L PROC,lr:byte
         .ENDIF
     .ENDIF
 Rotate_L ENDP
+
 END main
+
 
