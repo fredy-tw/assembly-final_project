@@ -32,12 +32,19 @@ player_1direction byte ?
 player_2direction byte ?
 generate_1 byte 1
 generate_2 byte 1
-player_1 Byte 22 dup('..........',0);¦h¥X¨Óªº¨â®æ¬O µ¹¤@¶}©l¤è¶ôªº¦ì¸m
+player_1 Byte 22 dup('..........',0);ï¿½hï¿½Xï¿½Óªï¿½ï¿½ï¿½ï¿½O ï¿½ï¿½ï¿½@ï¿½}ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½m
 empty Byte '             ',0
 player_2 Byte 22 dup('..........',0)
+
+hConsoleInput HANDLE 0
+input_buffer INPUT_RECORD 128 DUP(<>)
+input_number DWORD 0
+key_state DWORD 6 DUP(0) ; recording each key is pressed or not ; order: a, s, d, j, l, space
 .code
 main PROC
-    ;mov eax,green+(blue*16) ;³]©wÃC¦â ­I´ºÂÅ¦â ¤è¶ô¥i¥HÀH«K§ï
+    INVOKE GetStdHandle, STD_INPUT_HANDLE
+    mov hConsoleInput, eax
+    ;mov eax,green+(blue*16) ;ï¿½]ï¿½wï¿½Cï¿½ï¿½ ï¿½Iï¿½ï¿½ï¿½Å¦ï¿½ ï¿½ï¿½ï¿½ï¿½iï¿½Hï¿½Hï¿½Kï¿½ï¿½
     call SetTextColor
     gameloop:
     .IF player_1==1
@@ -46,9 +53,44 @@ main PROC
     invoke Draw
     call ReadChar
     jmp gameloop
-    call ReadChar
+    call ReadChar  
     exit
 main ENDP
+
+GetKeyboardInput PROC
+    INVOKE GetNumberOfConsoleInputEvents, hConsoleInput, ADDR input_number
+    cmp input_number, 0
+    je end_process   
+    INVOKE ReadConsoleInput, hConsoleInput, ADDR input_buffer, 128, ADDR input_number
+    mov ecx, input_number
+    mov esi, 0
+process_event:
+    cmp esi, ecx
+    jge end_process
+    cmp input_buffer[esi].EventType, KEY_EVENT
+    jne next_event
+    movzx eax, input_buffer[esi].Event.uChar.AsciiChar
+    mov ebx, input_buffer[esi].Event.bKeyDown
+    .IF al == 'a'
+        mov key_state[0], ebx
+    .ELSEIF al == 's'
+        mov key_state[4], ebx
+    .ELSEIF al == 'd'
+        mov key_state[8], ebx
+    .ELSEIF al == 'j'
+        mov key_state[12], ebx
+    .ELSEIF al == 'l'
+        mov key_state[16], ebx
+    .ELSEIF al == 32  ; space ascii code
+        mov key_state[20], ebx  
+    .ENDIF
+next_event:
+    add esi, SIZEOF INPUT_RECORD
+    jmp process_event
+end_process:
+    ret
+GetKeyboardInput ENDP
+
 ;DrawTitle PROC
 ;   
 ;DrawTitle ENDP
@@ -70,7 +112,7 @@ main ENDP
 ;CheckState ENDP
 Generate_block PROC
 Generate_block ENDP
-Drawplayer PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte,paint:byte;³Ì«á¤@­Ó°Ñ¼Æ¨Ï§Ú­Ì¥i¥H¨M©wµe¤°»ò¤è¶ô
+Drawplayer PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte,paint:byte;ï¿½Ì«ï¿½@ï¿½Ó°Ñ¼Æ¨Ï§Ú­Ì¥iï¿½Hï¿½Mï¿½wï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     mov edx,player
     mov eax,0
     mov al,ypos
