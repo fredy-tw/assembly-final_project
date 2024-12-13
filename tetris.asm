@@ -1,4 +1,8 @@
 INCLUDE Irvine32.inc
+;TitleWidth=26
+;TitleHeight=7
+;Buttonwidth=12
+;ButtonHeight=5
 main          EQU start@0
 Drawplayer PROTO,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte,paint:byte
 Rotate_block PROTO,player:PTR BYTE,block_type:BYTE,xpos:byte,ypos:byte,direction:byte,lr:byte 
@@ -10,6 +14,11 @@ Rotate_Z PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
 Rotate_L PROTO,player:PTR byte,xpos:byte,ypos:byte,direction:byte,lr:byte
 Collison_block PROTO,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte
 Draw PROTO
+;DrawTitle PROTO
+;DrawButton1 PROTO
+;DrawButton2 PROTO
+;DrawButtonExit PROTO
+;CheckState PROTO
 .data
 xpos_1 BYTE 4
 ypos_1 BYTE 1
@@ -40,6 +49,25 @@ main PROC
     call ReadChar
     exit
 main ENDP
+;DrawTitle PROC
+;   
+;DrawTitle ENDP
+
+;DrawButton1 PROC
+;
+;DrawButton1 ENDP
+
+;DrawButton2 PROC
+;
+;DrawButton2 ENDP
+
+;DrawButtonExit PROC
+;
+;DrawButtonExit ENDP
+
+;CheckState PROC
+;
+;CheckState ENDP
 Generate_block PROC
 Generate_block ENDP
 Drawplayer PROC,player:PTR BYTE, block_type:BYTE, xpos:byte, ypos:byte, direction:byte,paint:byte;程把计ㄏи∕﹚礶ぐ或よ遏
