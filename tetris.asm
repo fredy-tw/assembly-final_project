@@ -43,9 +43,11 @@ player Byte 22 dup('..........',0),2 dup('xxxxxxxxxx',0);多出來的兩格是 給一開始
 hConsoleInput HANDLE 0
 input_buffer INPUT_RECORD 128 DUP(<>)
 input_number DWORD 0
-key_state DWORD 7 DUP(0) ; recording each key is pressed or not ; order: a, s, d, j, l, space, w
+key_state DWORD 6 DUP(0) ; recording each key is pressed or not ; order: a, s, d, j, l, space
 .code
+    SetConsoleOutputCP PROTO STDCALL :DWORD
 main PROC
+    INVOKE SetConsoleOutputCP, 437
     INVOKE GetStdHandle, STD_INPUT_HANDLE
     mov hConsoleInput, eax
     INVOKE GetStdHandle, STD_OUTPUT_HANDLE
@@ -54,12 +56,11 @@ main PROC
     ;call SetTextColor
     ;invoke DrawTitle
 Buttons:
-    invoke DrawButton1, Button1_State
-    invoke DrawButtonExit, ButtonExit_State
-
+    ;invoke DrawButton1, Button1_State
+    ;invoke DrawButtonExit, ButtonExit_State
     ;invoke CheckState
-
-    Call ClrSrc
+  
+    call Clrscr
     invoke Drawplayer, 'X'
     invoke Draw
 gameloop:
@@ -96,9 +97,7 @@ process_event:
     .ELSEIF al == 'l'
         mov key_state[16], ebx
     .ELSEIF al == 32  ; space ascii code
-        mov key_state[20], ebx  
-    .ELSEIF al == 'w'
-        mov key_state[24], ebx  
+        mov key_state[20], ebx   
     .ENDIF
 next_event:
     add esi, SIZEOF INPUT_RECORD
@@ -238,7 +237,6 @@ DrawButtonExit PROC, State:Byte
             ButtonWidth, 
             xyPosition,
             ADDR cellsWritten
-        
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBottom,	; pointer to the bottom of the box
@@ -292,7 +290,6 @@ DrawButtonExit PROC, State:Byte
 DrawButtonExit ENDP
 
 ;CheckState PROC
-.IF 
 ;
 ;CheckState ENDP
 
