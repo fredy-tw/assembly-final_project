@@ -1386,6 +1386,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _1rtest3:
                 dec ypos
+                cmp ypos,2
+                jl _1rtest4
                 invoke Collision_block,2
                 .IF collisioned == 0
                     jmp _1rtest4
@@ -1396,6 +1398,8 @@ Rotate_Z PROC,lr:Byte
             _1rtest4:                
                 inc xpos
                 add ypos,3
+                cmp ypos,21
+                jg _1rtest5
                 invoke Collision_block,2
                 .IF collisioned == 0
                     jmp _1rtest5
@@ -1405,6 +1409,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _1rtest5:
                 dec xpos
+                cmp ypos,21
+                jg _1rdontmove
                 invoke Collision_block,2
                 .IF collisioned == 0
                     jmp _1rdontmove
@@ -1431,6 +1437,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _2rtest2:
                 inc xpos
+                cmp xpos,9
+                jg _2rtest3
                 invoke Collision_block,3
                 .IF collisioned == 0
                 jmp _2rtest3
@@ -1440,6 +1448,10 @@ Rotate_Z PROC,lr:Byte
                 ret
             _2rtest3:
                 inc ypos
+                cmp xpos,9
+                jg _2rtest4
+                cmp ypos,21
+                jg _2rtest4
                 invoke Collision_block,3
                 .IF collisioned == 0
                 jmp _2rtest4
@@ -1450,6 +1462,8 @@ Rotate_Z PROC,lr:Byte
             _2rtest4:
                 dec xpos
                 sub ypos,3
+                cmp ypos,1
+                jl _2rtest5
                 invoke Collision_block,3
                 .IF collisioned == 0
                 jmp _2rtest5
@@ -1459,6 +1473,10 @@ Rotate_Z PROC,lr:Byte
                 ret
             _2rtest5:
                 inc xpos
+                cmp xpos,9
+                jg _2rdontmove
+                cmp ypos,1
+                jl _2rdontmove
                 invoke Collision_block,3
                 .IF collisioned == 0
                 jmp _2rdontmove
@@ -1493,6 +1511,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _3rtest3:
                 dec ypos
+                cmp ypos,2
+                jl _3rtest4
                 invoke Collision_block,3
                 .IF collisioned == 0
                     jmp _3rtest4
@@ -1503,6 +1523,8 @@ Rotate_Z PROC,lr:Byte
             _3rtest4:
                 dec xpos
                 add ypos,3
+                cmp ypos,21
+                jg _3rtest5
                 invoke Collision_block,3
                 .IF collisioned == 0
                     jmp _3rtest5
@@ -1512,6 +1534,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _3rtest5:
                 inc xpos
+                cmp ypos,21
+                jg _3rdontmove
                 invoke Collision_block,3
                 .IF collisioned == 0
                     jmp _3rdontmove
@@ -1525,7 +1549,7 @@ Rotate_Z PROC,lr:Byte
                 invoke Drawplayer,'x'
                 ret
         .ENDIF
-        .IF direction==3
+        .IF direction==4
             _4rtest1:
                 invoke Drawplayer,'.'
                 invoke Collision_block,1
@@ -1537,6 +1561,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _4rtest2:
                 dec xpos
+                cmp xpos,1
+                jl _4rtest3
                 invoke Collision_block,1
                 .IF collisioned == 0
                     jmp _4rtest3
@@ -1546,6 +1572,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _4rtest3:
                 inc ypos
+                cmp xpos,1
+                jl _4rtest4
                 invoke Collision_block,1
                 .IF collisioned == 0
                     jmp _4rtest4
@@ -1556,6 +1584,8 @@ Rotate_Z PROC,lr:Byte
             _4rtest4:
                 inc xpos
                 sub ypos,3
+                cmp ypos,1
+                jl _4rtest5
                 invoke Collision_block,1
                 .IF collisioned == 0
                     jmp _4rtest5
@@ -1565,6 +1595,10 @@ Rotate_Z PROC,lr:Byte
                 ret
             _4rtest5:
                 dec xpos
+                cmp xpos,2
+                jl _4rdontmove
+                cmp ypos,1
+                jl _4rdontmove
                 invoke Collision_block,1
                 .IF collisioned == 0
                     jmp _4rdontmove
@@ -1601,6 +1635,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _1ltest3:   
                 dec ypos
+                cmp ypos,2
+                jl _1ltest4
                 invoke Collision_block,3  
                 .IF collisioned == 0
                     jmp _1ltest4
@@ -1611,6 +1647,8 @@ Rotate_Z PROC,lr:Byte
             _1ltest4:
                 dec xpos
                 add ypos,3
+                cmp ypos,21
+                jg _1ltest5
                 invoke Collision_block,3
                 .IF collisioned == 0
                     jmp _1ltest5
@@ -1620,6 +1658,8 @@ Rotate_Z PROC,lr:Byte
                 ret
             _1ltest5:
                 inc xpos
+                cmp ypos,21
+                jg _1ldontmove
                 invoke Collision_block,3
                 .IF collisioned == 0
                     jmp _1ldontmove
@@ -1635,48 +1675,193 @@ Rotate_Z PROC,lr:Byte
         .ENDIF
         .IF direction==2
             _2ltest1:
-
-
+                invoke Drawplayer,'.'
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ltest2
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
             _2ltest2:
-
+                inc xpos
+                cmp xpos,9
+                jg _2ltest3
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ltest2
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
 
             _2ltest3:
-
+                inc ypos
+                cmp xpos,9
+                jg _2ltest4
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ltest2=4
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
 
             _2ltest4:
-
+                dec xpos
+                sub ypos,3
+                cmp ypos,2
+                jl _2ltest5
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ltest2=5
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
 
             _2ltest5:
+                inc xpos
+                cmp xpos,9
+                jg _2ldontmove
+                cmp ypos,2
+                jl _2ldontmove
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ldontmove
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
+            _2ldontmove:
+                dec,xpos
+                add ypos,2
+                invoke Drawplayer,'X'
+                ret
         .ENDIF
         .IF direction==3
+            invoke Drawplayer,'.'
             _3ltest1:
-
-
+                invoke Collision_block,2
+                .IF collisioned==0
+                    jmp _3ltest2
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
             _3ltest2:
-
+                dec xpos
+                invoke Collision_block,2
+                .IF collisioned==0
+                    jmp _3ltest3
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
 
             _3ltest3:
-
+                dec ypos
+                cmp ypos,2
+                jl _3ltest4
+                invoke Collision_block,2
+                .IF collisioned==0
+                    jmp _3ltest4
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
 
             _3ltest4:
-
+                inc xpos
+                add ypos,3
+                cmp ypos,21
+                jg _3ltest5
+                invoke Collision_block,2
+                .IF collisioned==0
+                    jmp _3ltest5
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
 
             _3ltest5:
+                dec xpos
+                cmp ypos,21
+                jg _3ldontmove
+                invoke Collision_block,2
+                .IF collisioned==0
+                    jmp _3ldontmove
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
+            _3ldontmove
+                inc xpos
+                sub ypos,2
+                ret
         .ENDIF
         .IF direction==3
             _4ltest1:
-
-
+                invoke Collision_block,3
+                .IF collisioned==0
+                    jmp _4ltest2
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _4ltest2:
-
-
+                dec xpos
+                cmp xpos,2
+                jl _4ltest3
+                invoke Collision_block,3
+                .IF collisioned==0
+                    jmp _4ltest3
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _4ltest3:
-
-
+                inc ypos
+                cmp xpos,2
+                jl _4ltest4
+                cmp ypos,21
+                jg _4ltest4
+                invoke Collision_block,3
+                .IF collisioned==0
+                    jmp _4ltest4
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _4ltest4:
-
-
+                inc xpos
+                sub ypos,3
+                cmp ypos,1
+                jl _4ltest5
+                invoke Collision_block,3
+                .IF collisioned==0
+                    jmp _4ltest5
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _4ltest5:
+                dec xpos
+                cmp ypos,1
+                jl _4ldontmove
+                cmp xpos,1
+                jl _4ldontmove
+                invoke Collision_block,3
+                .IF collisioned==0
+                    jmp _4ldontmove
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
+            _4ldontmove:
+                inc xpos
+                add ypos,2
+                ret
         .ENDIF
     .ENDIF
 Rotate_Z ENDP
