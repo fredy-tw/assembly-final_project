@@ -1,6 +1,7 @@
 INCLUDE Irvine32.inc
 main          EQU start@0
 Drawplayer PROTO,paint:byte
+Move_block PROTO,move_type:byte
 Rotate_block PROTO,lr:byte
 Rotate_I PROTO,lr:byte
 Rotate_S PROTO,lr:byte
@@ -8,9 +9,10 @@ Rotate_T PROTO,lr:byte
 Rotate_J PROTO,lr:byte
 Rotate_Z PROTO,lr:byte
 Rotate_L PROTO,lr:byte
-Collison_block PROTO,dir:byte
+Collision_block PROTO,dir:byte
 Drop_block PROTO,dir:byte
 Draw PROTO
+Generate_block PROTO
 ;DrawTitle PROTO
 DrawButton1 PROTO,State:byte
 DrawButtonExit PROTO,State:byte
@@ -38,12 +40,11 @@ ypos BYTE 1
 inputChar BYTE ?
 isJumping BYTE ?
 block_type byte 'O';indicate what kind of block player is controling I O J L S Z T
-direction byte '1'
+direction byte 1
 player Byte 22 dup('..........',0),2 dup('xxxxxxxxxx',0);ㄓㄢ琌 倒秨﹍よ遏竚
+collisioned Byte 1 ;to check if it is collision, 1 means not collision, 0 means collision
 hConsoleInput HANDLE 0
-input_buffer INPUT_RECORD 128 DUP(<>)
-input_number DWORD 0
-key_state DWORD 6 DUP(0) ; recording each key is pressed or not ; order: a, s, d, j, l, space
+temp BYTE 0
 .code
     SetConsoleOutputCP PROTO STDCALL :DWORD
 main PROC
@@ -61,50 +62,40 @@ Buttons:
     ;invoke CheckState
   
     call Clrscr
+gameloop_out:
+    mov collisioned, 1
+    invoke Generate_block
     invoke Drawplayer, 'X'
     invoke Draw
+gameloop_in:
+    mov ecx, 5
 gameloop:
-    invoke Sleep, 100
+    mov eax, 200
+    call Delay
+    push eax
+    call ReadKey
+    jz no_input
+    .IF al == 'a'
+        mov temp, 1
+    .ELSEIF al == 's'
+        mov temp, 2
+    .ELSEIF al == 'd'
+        mov temp, 3
+    .ENDIF
+    invoke Move_block, temp
+no_input:
+    pop eax
+    loop gameloop
+    mov collisioned, 1
     invoke Drop_block, direction
     ;call ReadChar
-    jmp gameloop
+    cmp collisioned, 1
+    je gameloop_in
+    jmp gameloop_out
     ;call ReadChar
     exit
 main ENDP
 
-GetKeyboardInput PROC
-    INVOKE GetNumberOfConsoleInputEvents, hConsoleInput, ADDR input_number
-    cmp input_number, 0
-    je end_process  
-    INVOKE ReadConsoleInput, hConsoleInput, ADDR input_buffer, 128, ADDR input_number
-    mov ecx, input_number
-    mov esi, 0
-process_event:
-    cmp esi, ecx
-    jge end_process
-    cmp input_buffer[esi].EventType, KEY_EVENT
-    jne next_event
-    movzx eax, input_buffer[esi].Event.uChar.AsciiChar
-    mov ebx, input_buffer[esi].Event.bKeyDown
-    .IF al == 'a'
-        mov key_state[0], ebx
-    .ELSEIF al == 's'
-        mov key_state[4], ebx
-    .ELSEIF al == 'd'
-        mov key_state[8], ebx
-    .ELSEIF al == 'j'
-        mov key_state[12], ebx
-    .ELSEIF al == 'l'
-        mov key_state[16], ebx
-    .ELSEIF al == 32  ; space ascii code
-        mov key_state[20], ebx   
-    .ENDIF
-next_event:
-    add esi, SIZEOF INPUT_RECORD
-    jmp process_event
-end_process:
-    ret
-GetKeyboardInput ENDP
 
 ;DrawTitle PROC
 ;  
@@ -294,6 +285,47 @@ DrawButtonExit ENDP
 ;CheckState ENDP
 
 Generate_block PROC
+    mov xpos, 4
+    mov ypos, 1
+    mov direction, 1
+    mov ebx, 7
+    call Random32
+    mul ebx
+    cmp edx, 0
+    je gen_I
+    cmp edx, 1
+    je gen_S
+    cmp edx, 2
+    je gen_Z
+    cmp edx, 3
+    je gen_T
+    cmp edx, 4
+    je gen_J
+    cmp edx, 5
+    je gen_L
+    cmp edx, 6
+    je gen_O
+gen_I:
+    mov block_type, 'I'
+    ret
+gen_S:
+    mov block_type, 'S'
+    ret
+gen_Z:
+    mov block_type, 'Z'
+    ret
+gen_T:
+    mov block_type, 'T'
+    ret
+gen_J:
+    mov block_type, 'J'
+    ret
+gen_L:
+    mov block_type, 'L'
+    ret
+gen_O:
+    mov block_type, 'O'
+    ret
 Generate_block ENDP
 Drawplayer PROC,paint:byte;程把计ㄏи∕﹚礶ぐ或よ遏
     mov edx,OFFSET player
@@ -567,6 +599,7 @@ Drawplayer PROC,paint:byte;程把计ㄏи∕﹚礶ぐ或よ遏
     ret
 Drawplayer ENDP
 Draw PROC
+    push ecx
     mov ecx,22
     mov dl,3;xpos
     mov dh,3;ypos
@@ -585,9 +618,10 @@ Draw PROC
         inc dh
         loop L
     ;call ReadChar
+    pop ecx
     ret
 Draw ENDP
-Collison_block PROC,dir:byte ; 0 collide 1 safe to place
+Collision_block PROC,dir:byte ; 0 collide 1 safe to place
     mov edx,OFFSET player
     mov eax,0
     mov al,ypos
@@ -609,7 +643,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==2
@@ -625,7 +659,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,11
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
@@ -641,7 +675,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
@@ -657,7 +691,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,11
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
     .ENDIF
@@ -673,7 +707,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
         dec edx
         cmp BYTE PTR [edx],'.'
         jne collison
-        mov bl,1
+        mov collisioned,1
         ret
     .ENDIF
     .IF block_type=='T' ;good
@@ -690,7 +724,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  ;face right
@@ -706,7 +740,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,10
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==3 ;face down
@@ -722,7 +756,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,10
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==4 ;face left
@@ -738,7 +772,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,11
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
     .ENDIF
@@ -756,7 +790,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  
@@ -772,7 +806,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,11
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
@@ -787,7 +821,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
@@ -803,7 +837,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,11
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
     .ENDIF
@@ -821,7 +855,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  
@@ -837,7 +871,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,10
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
@@ -853,7 +887,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
@@ -869,7 +903,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,10
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
     .ENDIF
@@ -887,7 +921,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  
@@ -903,7 +937,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,11
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
@@ -919,7 +953,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,11
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
@@ -935,7 +969,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
     .ENDIF
@@ -953,7 +987,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  
@@ -969,7 +1003,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             inc edx
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
@@ -985,7 +1019,7 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,9
             cmp BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
@@ -1001,33 +1035,56 @@ Collison_block PROC,dir:byte ; 0 collide 1 safe to place
             add edx,11
             mov BYTE PTR [edx],'.'
             jne collison
-            mov bl,1
+            mov collisioned,1
             ret
         .ENDIF
     .ENDIF
 collison:
     ; mov ypos, 10
-    mov bl,0
+    mov collisioned, 0
     ret
-Collison_block ENDP
-
+Collision_block ENDP
 Drop_block PROC,dir:byte
-    ;inc ypos
-    ;invoke Collison_block,dir
-    ;dec ypos
-    ;cmp bl, 0
-    ;je L1
     invoke Drawplayer,'.'
     inc ypos
-    invoke Collison_block,dir
-    cmp bl, 1
-    je L1
+    invoke Collision_block,dir
     dec ypos
-    L1:
+    cmp collisioned, 0
+    je L1
+    inc ypos
+L1:
     invoke Drawplayer,'X'
     invoke Draw
     ret
 Drop_block ENDP
+Move_block PROC, move_type: BYTE
+    invoke Drawplayer, '.'
+    .IF move_type == 1
+        dec xpos
+        invoke Collision_block, direction
+        .IF collisioned == 0
+            inc xpos
+        .ENDIF
+    .ENDIF
+    .IF move_type == 3
+        inc xpos
+        invoke Collision_block, direction
+        .IF collisioned == 0
+            dec xpos
+        .ENDIF
+    .ENDIF
+    .IF move_type == 2
+        inc ypos
+        invoke Collision_block, direction
+        .IF collisioned == 0
+            dec ypos
+        .ENDIF
+    .ENDIF
+    invoke Drawplayer, 'X'
+    invoke Draw
+    ret
+Move_block ENDP
+
 Rotate_block PROC,lr:byte
     .IF block_type=='I'
         invoke Rotate_I,lr
@@ -1051,7 +1108,7 @@ Rotate_block PROC,lr:byte
 Rotate_block ENDP
 Rotate_I PROC,lr:byte
     .IF lr=='r'
-        .IF direction=='1'
+        .IF direction==1
             _1rtest1:
 
 
@@ -1067,7 +1124,7 @@ Rotate_I PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2rtest1:
 
 
@@ -1082,7 +1139,7 @@ Rotate_I PROC,lr:byte
 
             _2rtest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3rtest1:
 
 
@@ -1097,7 +1154,7 @@ Rotate_I PROC,lr:byte
 
             _3rtest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4rtest1:
 
 
@@ -1114,7 +1171,7 @@ Rotate_I PROC,lr:byte
         .ENDIF
     .ENDIF
     .IF lr=='l'
-        .IF direction=='1'
+        .IF direction==1
             _1ltest1:
 
 
@@ -1130,7 +1187,7 @@ Rotate_I PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2ltest1:
 
 
@@ -1145,7 +1202,7 @@ Rotate_I PROC,lr:byte
 
             _2ltest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3ltest1:
 
 
@@ -1160,7 +1217,7 @@ Rotate_I PROC,lr:byte
 
             _3ltest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4ltest1:
 
 
@@ -1179,7 +1236,7 @@ Rotate_I PROC,lr:byte
 Rotate_I ENDP
 Rotate_S PROC,lr:byte
     .IF lr=='r'
-        .IF direction=='1'
+        .IF direction==1
             _1rtest1:
 
 
@@ -1195,7 +1252,7 @@ Rotate_S PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2rtest1:
 
 
@@ -1210,7 +1267,7 @@ Rotate_S PROC,lr:byte
 
             _2rtest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3rtest1:
 
 
@@ -1225,7 +1282,7 @@ Rotate_S PROC,lr:byte
 
             _3rtest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4rtest1:
 
 
@@ -1242,7 +1299,7 @@ Rotate_S PROC,lr:byte
         .ENDIF
     .ENDIF
     .IF lr=='l'
-        .IF direction=='1'
+        .IF direction==1
             _1ltest1:
 
 
@@ -1258,7 +1315,7 @@ Rotate_S PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2ltest1:
 
 
@@ -1273,7 +1330,7 @@ Rotate_S PROC,lr:byte
 
             _2ltest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3ltest1:
 
 
@@ -1288,7 +1345,7 @@ Rotate_S PROC,lr:byte
 
             _3ltest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4ltest1:
 
 
@@ -1304,129 +1361,279 @@ Rotate_S PROC,lr:byte
             _4ltest5:
         .ENDIF
     .ENDIF
+    ret
 Rotate_S ENDP
 Rotate_Z PROC,lr:Byte
     .IF lr=='r'
-        .IF direction=='1'
+        .IF direction==1
             _1rtest1:
-                invoke Collison_block, '2'
-                cmp bl,1
-                jne _1rtest2
                 invoke Drawplayer,'.'
-                mov direction,'2'
-                invoke Drawplayer,'X'
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rtest2
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'x'
                 ret
             _1rtest2:
-                invoke Collison_block,'2'
-                cmp bl,1
-                jne _1rtest3
-                invoke Drawplayer,'.'
                 dec xpos
-                mov direction,'2'
-                invoke Drawplayer,'X'
+                invoke Collision_block,2
+                .IF collisioned ==0
+                    jmp _1rtest3
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'x'
                 ret
             _1rtest3:
-                invoke Collison_block,'2'
-                cmp bl,1
-                jne _1rtest4
-                invoke Drawplayer,'.'
-                mov direction,'2'
-                dec xpos
                 dec ypos
-                invoke Drawplayer,'X'
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rtest4
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'x'
                 ret
             _1rtest4:                
-                cmp ypos,19
-                jg _dontmove
-                invoke Collison_block,'2'
-                cmp bl,1
-                jne _1rtest5
-                invoke Drawplayer,'.'
-                mov direction,'2'
-                add ypos,2
-                invoke Drawplayer,'X'
+                inc xpos
+                add ypos,3
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rtest5
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'x'
                 ret
             _1rtest5:
-                invoke Collison_block,'2'
-                cmp bl,1
-                jne _dontmove
-                invoke Drawplayer,'.'
-                mov direction,'2'
-                invoke Drawplayer,'X'
+                dec xpos
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rdontmove
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'x'
                 ret
-            _dontmove:
+            _1rdontmove:
+                mov direction,1
+                inc xpos
+                sub ypos,2
+                invoke Drawplayer,'x'
                 ret
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2rtest1:
-                invoke Collison_block, '3'
-                cmp bl,1
-                jne _2rtest2
                 invoke Drawplayer,'.'
-                mov direction,'3'
-                invoke Drawplayer,'X'
+                invoke Collision_block,3
+                .IF collisioned == 0
+                jmp _2rtest2
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
                 ret
             _2rtest2:
-                cmp xpos,9
-                jg _2rtest3
-                invoke Collison_block,'3'
+                inc xpos
+                invoke Collision_block,3
+                .IF collisioned == 0
+                jmp _2rtest3
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _2rtest3:
-
-
+                inc ypos
+                invoke Collision_block,3
+                .IF collisioned == 0
+                jmp _2rtest4
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _2rtest4:
-
-
+                dec xpos
+                sub ypos,3
+                invoke Collision_block,3
+                .IF collisioned == 0
+                jmp _2rtest5
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _2rtest5:
+                inc xpos
+                invoke Collision_block,3
+                .IF collisioned == 0
+                jmp _2rdontmove
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
+            _2rdontmove:
+                add ypos,3
+                dec xpos
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3rtest1:
-
-
+                invoke Drawplayer,'.'
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _3rtest2
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _3rtest2:
-
-
+                inc xpos
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _3rtest3
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _3rtest3:
-
-
+                dec ypos
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _3rtest4
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _3rtest4:
-
-
+                dec xpos
+                add ypos,3
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _3rtest5
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _3rtest5:
+                inc xpos
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _3rdontmove
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
+            _3rdontmove:
+                dec xpos
+                sub ypos,2
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4rtest1:
-
-
+                invoke Drawplayer,'.'
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rtest2
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
             _4rtest2:
-
-
+                dec xpos
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rtest3
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
             _4rtest3:
-
-
+                inc ypos
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rtest4
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
             _4rtest4:
-
-
+                inc xpos
+                sub ypos,3
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rtest5
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
             _4rtest5:
+                dec xpos
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rdontmove
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'x'
+                ret
+            _4rdontmove:
+                inc xpos
+                add ypos,2
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
     .ENDIF
     .IF lr=='l'
-        .IF direction=='1'
+        .IF direction==1
             _1ltest1:
-
-
+                invoke Drawplayer,'.'
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _1ltest2
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _1ltest2:
-           
-            _1ltest3:
-
-
+                inc xpos
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _1ltest3
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
+            _1ltest3:   
+                dec ypos
+                invoke Collision_block,3  
+                .IF collisioned == 0
+                    jmp _1ltest4
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _1ltest4:
-
-
+                dec xpos
+                add ypos,3
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _1ltest5
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
             _1ltest5:
-
-
+                inc xpos
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _1ldontmove
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'x'
+                ret
+            _1ldontmove:
+                dec xpos
+                sub ypos,3
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2ltest1:
 
 
@@ -1441,7 +1648,7 @@ Rotate_Z PROC,lr:Byte
 
             _2ltest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3ltest1:
 
 
@@ -1456,7 +1663,7 @@ Rotate_Z PROC,lr:Byte
 
             _3ltest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4ltest1:
 
 
@@ -1475,7 +1682,7 @@ Rotate_Z PROC,lr:Byte
 Rotate_Z ENDP
 Rotate_T PROC,lr:byte
     .IF lr=='r'
-        .IF direction=='1'
+        .IF direction==1
             _1rtest1:
 
 
@@ -1491,7 +1698,7 @@ Rotate_T PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2rtest1:
 
 
@@ -1506,7 +1713,7 @@ Rotate_T PROC,lr:byte
 
             _2rtest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3rtest1:
 
 
@@ -1521,7 +1728,7 @@ Rotate_T PROC,lr:byte
 
             _3rtest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4rtest1:
 
 
@@ -1538,7 +1745,7 @@ Rotate_T PROC,lr:byte
         .ENDIF
     .ENDIF
     .IF lr=='l'
-        .IF direction=='1'
+        .IF direction==1
             _1ltest1:
 
 
@@ -1554,7 +1761,7 @@ Rotate_T PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2ltest1:
 
 
@@ -1569,7 +1776,7 @@ Rotate_T PROC,lr:byte
 
             _2ltest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3ltest1:
 
 
@@ -1584,7 +1791,7 @@ Rotate_T PROC,lr:byte
 
             _3ltest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4ltest1:
 
 
@@ -1603,7 +1810,7 @@ Rotate_T PROC,lr:byte
 Rotate_T ENDP
 Rotate_J PROC,lr:byte
     .IF lr=='r'
-        .IF direction=='1'
+        .IF direction==1
             _1rtest1:
 
 
@@ -1619,7 +1826,7 @@ Rotate_J PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2rtest1:
 
 
@@ -1634,7 +1841,7 @@ Rotate_J PROC,lr:byte
 
             _2rtest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3rtest1:
 
 
@@ -1649,7 +1856,7 @@ Rotate_J PROC,lr:byte
 
             _3rtest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4rtest1:
 
 
@@ -1666,7 +1873,7 @@ Rotate_J PROC,lr:byte
         .ENDIF
     .ENDIF
     .IF lr=='l'
-        .IF direction=='1'
+        .IF direction==1
             _1ltest1:
 
 
@@ -1682,7 +1889,7 @@ Rotate_J PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2ltest1:
 
 
@@ -1697,7 +1904,7 @@ Rotate_J PROC,lr:byte
 
             _2ltest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3ltest1:
 
 
@@ -1712,7 +1919,7 @@ Rotate_J PROC,lr:byte
 
             _3ltest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4ltest1:
 
 
@@ -1731,7 +1938,7 @@ Rotate_J PROC,lr:byte
 Rotate_J ENDP
 Rotate_L PROC,lr:byte
     .IF lr=='r'
-        .IF direction=='1'
+        .IF direction==1
             _1rtest1:
 
 
@@ -1747,7 +1954,7 @@ Rotate_L PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2rtest1:
 
 
@@ -1762,7 +1969,7 @@ Rotate_L PROC,lr:byte
 
             _2rtest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3rtest1:
 
 
@@ -1777,7 +1984,7 @@ Rotate_L PROC,lr:byte
 
             _3rtest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4rtest1:
 
 
@@ -1794,7 +2001,7 @@ Rotate_L PROC,lr:byte
         .ENDIF
     .ENDIF
     .IF lr=='l'
-        .IF direction=='1'
+        .IF direction==1
             _1ltest1:
 
 
@@ -1810,7 +2017,7 @@ Rotate_L PROC,lr:byte
 
 
         .ENDIF
-        .IF direction=='2'
+        .IF direction==2
             _2ltest1:
 
 
@@ -1825,7 +2032,7 @@ Rotate_L PROC,lr:byte
 
             _2ltest5:
         .ENDIF
-        .IF direction=='3'
+        .IF direction==3
             _3ltest1:
 
 
@@ -1840,7 +2047,7 @@ Rotate_L PROC,lr:byte
 
             _3ltest5:
         .ENDIF
-        .IF direction=='4'
+        .IF direction==3
             _4ltest1:
 
 
