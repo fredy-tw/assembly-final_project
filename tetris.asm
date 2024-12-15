@@ -48,7 +48,7 @@ inputChar BYTE ?
 isJumping BYTE ?
 block_type byte 'O';indicate what kind of block player is controling I O J L S Z T
 direction byte 1
-player Byte 22 dup('..........',0),2 dup('xxxxxxxxxx',0);¦h¥X¨Óªº¨â®æ¬O µ¹¤@¶}©l¤è¶ôªº¦ì¸m
+player Byte 22 dup('..........',0),2 dup('xxxxxxxxxx',0);ï¿½hï¿½Xï¿½Óªï¿½ï¿½ï¿½ï¿½O ï¿½ï¿½ï¿½@ï¿½}ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½m
 collisioned Byte 1  ;to check if it is collision, 1 means not collision, 0 means collision
 hConsoleInput HANDLE 0
 temp BYTE 0
@@ -60,7 +60,7 @@ main PROC
     mov hConsoleInput, eax
     INVOKE GetStdHandle, STD_OUTPUT_HANDLE
     mov outputHandle, eax
-    ;mov eax,red+(blue*16) ;³]©wÃC¦â ­I´ºÂÅ¦â ¤è¶ô¥i¥HÀH«K§ï
+    ;mov eax,red+(blue*16) ;ï¿½]ï¿½wï¿½Cï¿½ï¿½ ï¿½Iï¿½ï¿½ï¿½Å¦ï¿½ ï¿½ï¿½ï¿½ï¿½iï¿½Hï¿½Hï¿½Kï¿½ï¿½
     ;call SetTextColor
     invoke DrawTitle
 Buttons:
@@ -100,14 +100,48 @@ no_input:
     loop gameloop
     mov collisioned, 1
     invoke Drop_block, direction
-    ;call ReadChar
     cmp collisioned, 1
     je gameloop_in
+    call RemoveBlock
     jmp gameloop_out
-    ;call ReadChar
     exit
 main ENDP
 
+RemoveBlock PROC
+    mov eax, 0
+    mov esi, 0
+check_row:
+    cmp esi, 242
+    jae end_remove
+    .IF player[esi] == '.'
+        add eax, 11
+        mov esi, eax
+        jmp check_row
+    .ELSEIF player[esi] == 0
+        push esi
+        add eax, 11
+        mov edx, esi
+        sub edx, 11
+remove_row:
+        mov bl, player[edx]
+        mov player[esi], bl
+        .IF edx > 0
+            sub esi, 1
+            sub edx, 1
+            jmp remove_row
+        .ENDIF
+        mov ecx, 10
+add_empty_row:
+        mov player[edx], '.'
+        add edx, 1
+        loop add_empty_row
+        pop esi
+    .ENDIF
+    add esi, 1
+    jmp check_row
+end_remove:
+    ret
+RemoveBlock ENDP
 
 DrawTitle PROC
     sub xyPosition0.y, 4 
@@ -420,7 +454,7 @@ gen_O:
     mov block_type, 'O'
     ret
 Generate_block ENDP
-Drawplayer PROC,paint:byte;³Ì«á¤@­Ó°Ñ¼Æ¨Ï§Ú­Ì¥i¥H¨M©wµe¤°»ò¤è¶ô
+Drawplayer PROC,paint:byte;ï¿½Ì«ï¿½@ï¿½Ó°Ñ¼Æ¨Ï§Ú­Ì¥iï¿½Hï¿½Mï¿½wï¿½eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     mov edx,OFFSET player
     mov eax,0
     mov al,ypos
