@@ -33,7 +33,8 @@ outputHandle DWORD 0
 bytesWritten DWORD 0
 attributes1 WORD ButtonWidth DUP(0Ch)
 attributes2 WORD ButtonWidth DUP(0Fh)
-xyPosition COORD <10,5>
+xyPosition1 COORD <10,7>
+xyPosition2 COORD <10,12>
 cellsWritten DWORD ?
 xpos BYTE 4
 ypos BYTE 1
@@ -57,12 +58,11 @@ main PROC
     ;call SetTextColor
     ;invoke DrawTitle
 Buttons:
-    ;invoke DrawButton1, Button1_State
-    ;invoke DrawButtonExit, ButtonExit_State
+    invoke DrawButton1, Button1_State
+    invoke DrawButtonExit, ButtonExit_State
     ;invoke CheckState
-  
-    call Clrscr
 gameloop_out:
+    call Clrscr
     mov collisioned, 1
     invoke Generate_block
     invoke Drawplayer, 'X'
@@ -102,182 +102,190 @@ main ENDP
 ;DrawTitle ENDP
 
 DrawButton1 PROC, State:Byte
+    sub xyPosition1.y, 2
     .IF State==1
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes2,
             ButtonWidth, 
-            xyPosition,
+            xyPosition1,
             ADDR cellsWritten
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonTop,	; pointer to the top box line
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition1,	; coordinates of first char
             ADDR cellsWritten	; output count
             
-        inc xyPosition.y	; next line
+        inc xyPosition1.y	; next line
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes2,
             ButtonWidth, 
-            xyPosition,
+            xyPosition1,
             ADDR cellsWritten
         
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBody1,	; pointer to the box body
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition1,	; coordinates of first char
             ADDR cellsWritten	; output count
         
-        inc xyPosition.y	; next line
+        inc xyPosition1.y	; next line
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes2,
             ButtonWidth, 
-            xyPosition,
+            xyPosition1,
             ADDR cellsWritten
         
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBottom,	; pointer to the bottom of the box
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition1,	; coordinates of first char
             ADDR cellsWritten	; output count
+        ret
     .ELSEIF State==0
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes1,
             ButtonWidth, 
-            xyPosition,
+            xyPosition1,
             ADDR cellsWritten
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonTop,	; pointer to the top box line
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition1,	; coordinates of first char
             ADDR cellsWritten	; output count
             
-        inc xyPosition.y	; next line
+        inc xyPosition1.y	; next line
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes1,
             ButtonWidth, 
-            xyPosition,
+            xyPosition1,
             ADDR cellsWritten
         
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBody1,	; pointer to the box body
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition1,	; coordinates of first char
             ADDR cellsWritten	; output count
         
-        inc xyPosition.y	; next line
+        inc xyPosition1.y	; next line
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes1,
             ButtonWidth, 
-            xyPosition,
+            xyPosition1,
             ADDR cellsWritten
         
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBottom,	; pointer to the bottom of the box
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition1,	; coordinates of first char
             ADDR cellsWritten	; output count
+        ret
     .ENDIF
+    ret
 DrawButton1 ENDP
 
 DrawButtonExit PROC, State:Byte
+    sub xyPosition2.y, 2
     .IF State==1
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes2,
             ButtonWidth, 
-            xyPosition,
+            xyPosition2,
             ADDR cellsWritten
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonTop,	; pointer to the top box line
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
             
-        inc xyPosition.y	; next line
+        inc xyPosition2.y	; next line
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes2,
             ButtonWidth, 
-            xyPosition,
+            xyPosition2,
             ADDR cellsWritten
         
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBody2,	; pointer to the box body
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
         
-        inc xyPosition.y	; next line
+        inc xyPosition2.y	; next line
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes2,
             ButtonWidth, 
-            xyPosition,
+            xyPosition2,
             ADDR cellsWritten
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBottom,	; pointer to the bottom of the box
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
+        ret
     .ELSEIF State==0
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes1,
             ButtonWidth, 
-            xyPosition,
+            xyPosition2,
             ADDR cellsWritten
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonTop,	; pointer to the top box line
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
             
-        inc xyPosition.y	; next line
+        inc xyPosition2.y	; next line
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes1,
             ButtonWidth, 
-            xyPosition,
+            xyPosition2,
             ADDR cellsWritten
         
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBody2,	; pointer to the box body
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
         
-        inc xyPosition.y	; next line
+        inc xyPosition2.y	; next line
         INVOKE WriteConsoleOutputAttribute,
             outputHandle, 
             ADDR attributes1,
             ButtonWidth, 
-            xyPosition,
+            xyPosition2,
             ADDR cellsWritten
         
         INVOKE WriteConsoleOutputCharacter,
             outputHandle,	; console output handle
             ADDR ButtonBottom,	; pointer to the bottom of the box
             ButtonWidth,	; size of box line
-            xyPosition,	; coordinates of first char
+            xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
+        ret
     .ENDIF
+    ret
 DrawButtonExit ENDP
 
 ;CheckState PROC
@@ -1701,7 +1709,7 @@ Rotate_Z PROC,lr:Byte
                 jg _2ltest4
                 invoke Collision_block,1
                 .IF collisioned == 0
-                    jmp _2ltest2=4
+                    jmp _2ltest2;=4
                 .ENDIF
                 mov direction,1
                 invoke Drawplayer,'x'
@@ -1714,7 +1722,7 @@ Rotate_Z PROC,lr:Byte
                 jl _2ltest5
                 invoke Collision_block,1
                 .IF collisioned == 0
-                    jmp _2ltest2=5
+                    jmp _2ltest2;=5
                 .ENDIF
                 mov direction,1
                 invoke Drawplayer,'x'
@@ -1734,7 +1742,7 @@ Rotate_Z PROC,lr:Byte
                 invoke Drawplayer,'x'
                 ret
             _2ldontmove:
-                dec,xpos
+                dec xpos
                 add ypos,2
                 invoke Drawplayer,'X'
                 ret
@@ -1795,7 +1803,7 @@ Rotate_Z PROC,lr:Byte
                 mov direction,2
                 invoke Drawplayer,'X'
                 ret
-            _3ldontmove
+            _3ldontmove:
                 inc xpos
                 sub ypos,2
                 ret
