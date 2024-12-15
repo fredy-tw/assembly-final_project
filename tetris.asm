@@ -639,7 +639,7 @@ Drawplayer PROC,paint:byte;???@???????i?H?M?w?e??????
             mov BYTE PTR [edx],al
         .ENDIF
     .ENDIF
-    .IF block_type=='L' ;good
+    .IF block_type=='J' ;good
         .IF direction==1
             sub edx,12
             mov BYTE PTR [edx],al
@@ -681,7 +681,7 @@ Drawplayer PROC,paint:byte;???@???????i?H?M?w?e??????
             mov BYTE PTR [edx],al
         .ENDIF
     .ENDIF
-    .IF block_type=='J' ;good
+    .IF block_type=='L' ;good
         .IF direction==1
             sub edx,10
             mov BYTE PTR [edx],al
@@ -1034,7 +1034,7 @@ Collision_block PROC,dir:byte ; 0 collide 1 safe to place
             ret
         .ENDIF
     .ENDIF
-    .IF block_type=='L' ;good
+    .IF block_type=='J' ;good
         .IF dir==1
             sub edx,12
             cmp BYTE PTR [edx],'.'
@@ -1100,7 +1100,7 @@ Collision_block PROC,dir:byte ; 0 collide 1 safe to place
             ret
         .ENDIF
     .ENDIF
-    .IF block_type=='J' ;good
+    .IF block_type=='L' ;good
         .IF dir==1
             sub edx,10
             cmp BYTE PTR [edx],'.'
@@ -2993,7 +2993,7 @@ Rotate_L PROC,lr:byte
         .ENDIF
     .ENDIF
 Rotate_L ENDP
-Rotate_Z PROC,lr:Byte
+Rotate_Z PROC,lr:Byte                                
     .IF lr=='r'
         .IF direction==1
             _1rtest1:
