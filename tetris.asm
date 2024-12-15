@@ -13,7 +13,10 @@ Collision_block PROTO,dir:byte
 Drop_block PROTO,dir:byte
 Draw PROTO
 Generate_block PROTO
+<<<<<<< HEAD
 Remove_block PROTO
+=======
+>>>>>>> 296622e130b5dfbb4154d13ff528a1350cf94408
 DrawTitle PROTO
 DrawButton1 PROTO,State:byte
 DrawButtonExit PROTO,State:byte
@@ -368,7 +371,11 @@ DrawButtonExit PROC, State:Byte
             ButtonWidth,	; size of box line
             xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
+<<<<<<< HEAD
             ret
+=======
+        ret
+>>>>>>> 296622e130b5dfbb4154d13ff528a1350cf94408
     .ENDIF
     ret
 DrawButtonExit ENDP
