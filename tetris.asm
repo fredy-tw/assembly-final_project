@@ -13,7 +13,7 @@ Collision_block PROTO,dir:byte
 Drop_block PROTO,dir:byte
 Draw PROTO
 Generate_block PROTO
-;DrawTitle PROTO
+DrawTitle PROTO
 DrawButton1 PROTO,State:byte
 DrawButtonExit PROTO,State:byte
 ;CheckState PROTO
@@ -22,19 +22,24 @@ TitleHeight = 7
 Buttonwidth = 13
 ButtonHeight = 3
 .data
-
 Button1_State Byte 1
 ButtonExit_State Byte 0
+TitleTop    BYTE 0DAh, (TitleWidth - 2) DUP(0C4h), 0BFh 
+TitleBody1   BYTE 0B3h, (9) DUP(' '), 'T', 'E', 'T', 'R', 'I', 'S', (9) DUP(' '), 0B3h ;TETRIS_TITLE
+TitleBody2   BYTE 0B3h, (TitleWidth-2) DUP(' '), 0B3h ;STARTButton
+TitleBottom BYTE 0C0h, (TitleWidth - 2) DUP(0C4h), 0D9h
 ButtonTop    BYTE 0DAh, (Buttonwidth - 2) DUP(0C4h), 0BFh 
 ButtonBody1   BYTE 0B3h, (3) DUP(' '), 'S', 'T', 'A', 'R', 'T', (3) DUP(' '), 0B3h ;STARTButton
 ButtonBody2   BYTE 0B3h, (4) DUP(' '), 'E', 'X', 'I', 'T', (3) DUP(' '), 0B3h ;EXITButton
 ButtonBottom BYTE 0C0h, (Buttonwidth - 2) DUP(0C4h), 0D9h
 outputHandle DWORD 0
 bytesWritten DWORD 0
+attributes0 WORD TitleWidth DUP(0Ch)
 attributes1 WORD ButtonWidth DUP(0Ch)
 attributes2 WORD ButtonWidth DUP(0Fh)
-xyPosition1 COORD <10,7>
-xyPosition2 COORD <10,12>
+xyPosition0 COORD <3,4>
+xyPosition1 COORD <10,12>
+xyPosition2 COORD <10,17>
 cellsWritten DWORD ?
 xpos BYTE 4
 ypos BYTE 1
@@ -56,7 +61,7 @@ main PROC
     mov outputHandle, eax
     ;mov eax,red+(blue*16) ;設定顏色 背景藍色 方塊可以隨便改
     ;call SetTextColor
-    ;invoke DrawTitle
+    invoke DrawTitle
 Buttons:
     invoke DrawButton1, Button1_State
     invoke DrawButtonExit, ButtonExit_State
@@ -97,9 +102,82 @@ no_input:
 main ENDP
 
 
-;DrawTitle PROC
-;  
-;DrawTitle ENDP
+DrawTitle PROC
+    sub xyPosition0.y, 4 
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleTop,	; pointer to the top box line
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+            
+    inc xyPosition0.y	; next line
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleBody2,	; pointer to the box body
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+    inc xyPosition0.y	; next line
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleBody1,	; pointer to the box body
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+    inc xyPosition0.y	; next line
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleBody2,	; pointer to the box body
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+    inc xyPosition0.y	; next line
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleBottom,	; pointer to the bottom of the box
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+    ret
+DrawTitle ENDP
 
 DrawButton1 PROC, State:Byte
     sub xyPosition1.y, 2
