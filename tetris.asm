@@ -13,10 +13,7 @@ Collision_block PROTO,dir:byte
 Drop_block PROTO,dir:byte
 Draw PROTO
 Generate_block PROTO
-<<<<<<< HEAD
 Remove_block PROTO
-=======
->>>>>>> 296622e130b5dfbb4154d13ff528a1350cf94408
 DrawTitle PROTO
 DrawButton1 PROTO,State:byte
 DrawButtonExit PROTO,State:byte
@@ -371,11 +368,7 @@ DrawButtonExit PROC, State:Byte
             ButtonWidth,	; size of box line
             xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
-<<<<<<< HEAD
             ret
-=======
-        ret
->>>>>>> 296622e130b5dfbb4154d13ff528a1350cf94408
     .ENDIF
     ret
 DrawButtonExit ENDP
@@ -1196,32 +1189,32 @@ Move_block PROC, move_type: BYTE
     invoke Draw
     ret
 Move_block ENDP
-Remove_block PROC
-    mov edx, OFFSET player
-    push ecx
-    mov ecx, 22
-L1:
-    push ecx
-    mov ecx, 10
-L2:
-    cmp BYTE PTR [edx],'.'
-    je L3
-    cmp ecx, 1
-    je L4
-    loop L2
-L3:
-    add edx, ecx
-    pop ecx
-    loop L1
-    pop ecx
-    ret
-L4:
-    pop ecx
-    22 - ecx
-    loop L4
-    loop L1
-    ret
-Remove_block ENDP
+; Remove_block PROC
+;     mov edx, OFFSET player
+;     push ecx
+;     mov ecx, 22
+; L1:
+;     push ecx
+;     mov ecx, 10
+; L2:
+;     cmp BYTE PTR [edx],'.'
+;     je L3
+;     cmp ecx, 1
+;     je L4
+;     loop L2
+; L3:
+;     add edx, ecx
+;     pop ecx
+;     loop L1
+;     pop ecx
+;     ret
+; L4:
+;     pop ecx
+;     22 - ecx
+;     loop L4
+;     loop L1
+;     ret
+; Remove_block ENDP
 Rotate_block PROC,lr:byte
     .IF block_type=='I'
         invoke Rotate_I,lr
