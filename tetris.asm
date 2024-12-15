@@ -1407,7 +1407,7 @@ Rotate_S PROC,lr:byte
                     jmp _1rtest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest2:
                 dec xpos
@@ -1416,7 +1416,7 @@ Rotate_S PROC,lr:byte
                     jmp _1rtest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest3:
                 dec ypos
@@ -1427,7 +1427,7 @@ Rotate_S PROC,lr:byte
                     jmp _1rtest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest4:
                 inc xpos    
@@ -1439,7 +1439,7 @@ Rotate_S PROC,lr:byte
                     jmp _1rtest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest5:
                 dec xpos
@@ -1450,12 +1450,12 @@ Rotate_S PROC,lr:byte
                     jmp _1rdontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rdontmove:
                 inc xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -1466,7 +1466,7 @@ Rotate_S PROC,lr:byte
                     jmp _2rtest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest2:
                 inc xpos
@@ -1477,7 +1477,7 @@ Rotate_S PROC,lr:byte
                     jmp _2rtest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest3:
                 dec ypos
@@ -1490,7 +1490,7 @@ Rotate_S PROC,lr:byte
                     jmp _2rtest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest4:
                 dec xpos
@@ -1502,7 +1502,7 @@ Rotate_S PROC,lr:byte
                     jmp _2rtest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest5:
                 inc xpos
@@ -1515,12 +1515,12 @@ Rotate_S PROC,lr:byte
                     jmp _2rdontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rdontmove:
                 dec xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
             .ENDIF
         .IF direction==3
             _3rtest1:
@@ -1530,7 +1530,7 @@ Rotate_S PROC,lr:byte
                     jmp _3rtest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest2:
                 inc xpos
@@ -1539,7 +1539,7 @@ Rotate_S PROC,lr:byte
                     jmp _3rtest3
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
 
             _3rtest3:
@@ -1551,7 +1551,7 @@ Rotate_S PROC,lr:byte
                     jmp _3rtest4
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest4:
                 dec xpos
@@ -1563,7 +1563,7 @@ Rotate_S PROC,lr:byte
                     jmp _3rtest5
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest5:
                 inc xpos
@@ -1574,12 +1574,12 @@ Rotate_S PROC,lr:byte
                     jmp _3rdontmove
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rdontmove:
                 dec xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==4
@@ -1590,7 +1590,7 @@ Rotate_S PROC,lr:byte
                     jmp _4rtest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest2:
                 dec xpos
@@ -1601,7 +1601,7 @@ Rotate_S PROC,lr:byte
                     jmp _4rtest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest3:
                 inc ypos
@@ -1612,7 +1612,7 @@ Rotate_S PROC,lr:byte
                     jmp _4rtest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest4:
                 inc xpos
@@ -1624,7 +1624,7 @@ Rotate_S PROC,lr:byte
                     jmp _4rtest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest5:
                 dec xpos
@@ -1637,12 +1637,12 @@ Rotate_S PROC,lr:byte
                     jmp _4rdontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rdontmove:
                 inc xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
         .ENDIF
     .ENDIF
     .IF lr=='l'
@@ -1654,7 +1654,7 @@ Rotate_S PROC,lr:byte
                     jmp _1ltest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest2:
                 inc xpos
@@ -1663,7 +1663,7 @@ Rotate_S PROC,lr:byte
                     jmp _1ltest3
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest3:
                 dec ypos
@@ -1674,7 +1674,7 @@ Rotate_S PROC,lr:byte
                     jmp _1ltest4
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest4:
                 dec xpos
@@ -1686,7 +1686,7 @@ Rotate_S PROC,lr:byte
                     jmp _1ltest5
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest5:
                 inc xpos
@@ -1697,12 +1697,12 @@ Rotate_S PROC,lr:byte
                     jmp _1ldontmove
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ldontmove:
                 dec xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -1713,7 +1713,7 @@ Rotate_S PROC,lr:byte
                     jmp _2ltest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest2:
                 inc xpos
@@ -1724,7 +1724,7 @@ Rotate_S PROC,lr:byte
                     jmp _2ltest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest3:
                 inc ypos
@@ -1735,7 +1735,7 @@ Rotate_S PROC,lr:byte
                     jmp _2ltest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest4:
                 dec xpos
@@ -1747,7 +1747,7 @@ Rotate_S PROC,lr:byte
                     jmp _2ltest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest5:
                 dec xpos
@@ -1758,12 +1758,12 @@ Rotate_S PROC,lr:byte
                     jmp _2ldontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ldontmove:
                 dec xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==3
@@ -1774,7 +1774,7 @@ Rotate_S PROC,lr:byte
                     jmp _3ltest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest2:
                 dec xpos
@@ -1783,7 +1783,7 @@ Rotate_S PROC,lr:byte
                     jmp _3ltest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest3:
                 dec ypos
@@ -1794,7 +1794,7 @@ Rotate_S PROC,lr:byte
                     jmp _3ltest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest4:
                 inc xpos
@@ -1806,7 +1806,7 @@ Rotate_S PROC,lr:byte
                     jmp _3ltest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest5:
                 dec xpos
@@ -1817,12 +1817,12 @@ Rotate_S PROC,lr:byte
                     jmp _3ldontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ldontmove:
                 inc xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==4
@@ -1833,7 +1833,7 @@ Rotate_S PROC,lr:byte
                     jmp _4ltest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest2:
                 dec xpos
@@ -1844,7 +1844,7 @@ Rotate_S PROC,lr:byte
                     jmp _4ltest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest3:
                 inc ypos
@@ -1857,7 +1857,7 @@ Rotate_S PROC,lr:byte
                     jmp _4ltest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest4:
                 inc xpos
@@ -1869,7 +1869,7 @@ Rotate_S PROC,lr:byte
                     jmp _4ltest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest5:
                 dec xpos
@@ -1882,7 +1882,7 @@ Rotate_S PROC,lr:byte
                     jmp _4ldontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ldontmove:
                 inc xpos
@@ -1903,7 +1903,7 @@ Rotate_T PROC,lr:byte
                     jmp _1rtest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest2:
                 dec xpos
@@ -1912,7 +1912,7 @@ Rotate_T PROC,lr:byte
                     jmp _1rtest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest3:
                 dec ypos
@@ -1923,7 +1923,7 @@ Rotate_T PROC,lr:byte
                     jmp _1rtest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest4:   
                 inc xpos
@@ -1935,7 +1935,7 @@ Rotate_T PROC,lr:byte
                     jmp _1rtest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest5:
                 dec xpos
@@ -1946,7 +1946,7 @@ Rotate_T PROC,lr:byte
                     jmp _1rdontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rdontmove:
         .ENDIF
@@ -1958,7 +1958,7 @@ Rotate_T PROC,lr:byte
                     jmp _2rtest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest2:
                 inc xpos
@@ -1969,7 +1969,7 @@ Rotate_T PROC,lr:byte
                     jmp _2rtest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest3:
                 inc ypos
@@ -1982,7 +1982,7 @@ Rotate_T PROC,lr:byte
                     jmp _2rtest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest4:
                 dec xpos
@@ -1994,7 +1994,7 @@ Rotate_T PROC,lr:byte
                     jmp _2rtest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest5:
                 inc xpos
@@ -2007,12 +2007,12 @@ Rotate_T PROC,lr:byte
                     jmp _2rdontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rdontmove:
                 dec xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==3
@@ -2023,7 +2023,7 @@ Rotate_T PROC,lr:byte
                     jmp _3rtest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest2:
                 inc xpos
@@ -2032,7 +2032,7 @@ Rotate_T PROC,lr:byte
                     jmp _3rtest3
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest3:
                 dec ypos
@@ -2043,7 +2043,7 @@ Rotate_T PROC,lr:byte
                     jmp _3rtest4
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest4:
                 dec xpos
@@ -2055,7 +2055,7 @@ Rotate_T PROC,lr:byte
                     jmp _3rtest5
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest5:
                 inc xpos
@@ -2066,12 +2066,12 @@ Rotate_T PROC,lr:byte
                     jmp _3rtest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rdontmove:
                 dec xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==4
@@ -2082,7 +2082,7 @@ Rotate_T PROC,lr:byte
                     jmp _4rtest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest2:
                 dec xpos
@@ -2093,7 +2093,7 @@ Rotate_T PROC,lr:byte
                     jmp _4rtest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest3:
                 inc ypos
@@ -2104,7 +2104,7 @@ Rotate_T PROC,lr:byte
                     jmp _4rtest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest4:
                 inc xpos
@@ -2116,7 +2116,7 @@ Rotate_T PROC,lr:byte
                     jmp _4rtest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest5:
                 dec xpos
@@ -2129,12 +2129,12 @@ Rotate_T PROC,lr:byte
                     jmp _4rdontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rdontmove:
                 inc xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
     .ENDIF
@@ -2147,7 +2147,7 @@ Rotate_T PROC,lr:byte
                     jmp _1ltest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest2:
                 inc xpos
@@ -2156,7 +2156,7 @@ Rotate_T PROC,lr:byte
                     jmp _1ltest3
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest3:
                 dec ypos
@@ -2167,7 +2167,7 @@ Rotate_T PROC,lr:byte
                     jmp _1ltest4
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest4:
                 dec xpos
@@ -2179,7 +2179,7 @@ Rotate_T PROC,lr:byte
                     jmp _1ltest5
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest5:
                 inc xpos
@@ -2190,12 +2190,12 @@ Rotate_T PROC,lr:byte
                     jmp _1ldontmove
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ldontmove:
                 dec xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -2206,7 +2206,7 @@ Rotate_T PROC,lr:byte
                     jmp _2ltest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest2:
                 inc xpos
@@ -2217,7 +2217,7 @@ Rotate_T PROC,lr:byte
                     jmp _2ltest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest3:
                 inc ypos
@@ -2228,7 +2228,7 @@ Rotate_T PROC,lr:byte
                     jmp _2ltest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest4:
                 dec xpos
@@ -2240,7 +2240,7 @@ Rotate_T PROC,lr:byte
                     jmp _2ltest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest5:
                 inc xpos
@@ -2253,12 +2253,12 @@ Rotate_T PROC,lr:byte
                     jmp _2ldontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ldontmove:
                 dec xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==3
@@ -2269,7 +2269,7 @@ Rotate_T PROC,lr:byte
                     jmp _3ltest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest2:
                 dec xpos
@@ -2278,7 +2278,7 @@ Rotate_T PROC,lr:byte
                     jmp _3ltest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest3:
                 dec ypos
@@ -2289,7 +2289,7 @@ Rotate_T PROC,lr:byte
                     jmp _3ltest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest4:
                 inc xpos
@@ -2301,7 +2301,7 @@ Rotate_T PROC,lr:byte
                     jmp _3ltest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest5:
                 dec xpos
@@ -2312,12 +2312,12 @@ Rotate_T PROC,lr:byte
                     jmp _3ldontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ldontmove:
                 inc xpos 
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==4
@@ -2328,7 +2328,7 @@ Rotate_T PROC,lr:byte
                     jmp _4ltest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest2:
                 dec xpos
@@ -2339,7 +2339,7 @@ Rotate_T PROC,lr:byte
                     jmp _4ltest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret        
             _4ltest3:
                 inc ypos
@@ -2352,7 +2352,7 @@ Rotate_T PROC,lr:byte
                     jmp _4ltest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest4:
                 inc xpos
@@ -2364,7 +2364,7 @@ Rotate_T PROC,lr:byte
                     jmp _4ltest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest5:
                 dec xpos
@@ -2377,7 +2377,7 @@ Rotate_T PROC,lr:byte
                     jmp _4ldontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ldontmove:
         .ENDIF
@@ -2393,7 +2393,7 @@ Rotate_J PROC,lr:byte
                     jmp _1rtest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest2:
                 dec xpos
@@ -2402,7 +2402,7 @@ Rotate_J PROC,lr:byte
                     jmp _1rtest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest3:
                 dec ypos
@@ -2413,7 +2413,7 @@ Rotate_J PROC,lr:byte
                     jmp _1rtest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest4:
                 inc xpos
@@ -2425,7 +2425,7 @@ Rotate_J PROC,lr:byte
                     jmp _1rtest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest5:
                 dec xpos
@@ -2436,12 +2436,12 @@ Rotate_J PROC,lr:byte
                     jmp _1rdontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rdontmove:
                 inc xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -2452,7 +2452,7 @@ Rotate_J PROC,lr:byte
                     jmp _2rtest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest2:
                 inc xpos
@@ -2466,7 +2466,7 @@ Rotate_J PROC,lr:byte
                     jmp _2rtest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest3:
                 dec xpos
@@ -2478,7 +2478,7 @@ Rotate_J PROC,lr:byte
                     jmp _2rtest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest4:
                 inc xpos
@@ -2491,12 +2491,12 @@ Rotate_J PROC,lr:byte
                     jmp _2rdontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rdontmove:
                 dec xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==3
@@ -2507,7 +2507,7 @@ Rotate_J PROC,lr:byte
                     jmp _3rtest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest2:
                 inc xpos
@@ -2516,7 +2516,7 @@ Rotate_J PROC,lr:byte
                     jmp _3rtest3
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest3:
                 dec ypos
@@ -2527,7 +2527,7 @@ Rotate_J PROC,lr:byte
                     jmp _3rtest4
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest4:
                 dec xpos
@@ -2539,7 +2539,7 @@ Rotate_J PROC,lr:byte
                     jmp _3rtest5
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest5:
                 inc xpos
@@ -2550,12 +2550,12 @@ Rotate_J PROC,lr:byte
                     jmp _3rdontmove
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rdontmove:
                 dec xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==4
@@ -2566,7 +2566,7 @@ Rotate_J PROC,lr:byte
                     jmp _4rtest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest2:
                 dec xpos
@@ -2577,7 +2577,7 @@ Rotate_J PROC,lr:byte
                     jmp _4rtest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest3:
                 inc ypos
@@ -2588,7 +2588,7 @@ Rotate_J PROC,lr:byte
                     jmp _4rtest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest4:
                 inc xpos
@@ -2600,7 +2600,7 @@ Rotate_J PROC,lr:byte
                     jmp _4rtest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest5:
                 dec xpos
@@ -2613,12 +2613,12 @@ Rotate_J PROC,lr:byte
                     jmp _4rdontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rdontmove:
                 inc xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
     .ENDIF
@@ -2631,7 +2631,7 @@ Rotate_J PROC,lr:byte
                     jmp _1ltest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest2:
                 inc xpos
@@ -2640,7 +2640,7 @@ Rotate_J PROC,lr:byte
                     jmp _1ltest3
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest3:
                 dec ypos
@@ -2651,7 +2651,7 @@ Rotate_J PROC,lr:byte
                     jmp _1ltest4
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest4:
                 dec xpos
@@ -2663,7 +2663,7 @@ Rotate_J PROC,lr:byte
                     jmp _1ltest5
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest5:
                 inc xpos
@@ -2674,12 +2674,12 @@ Rotate_J PROC,lr:byte
                     jmp _1ldontmove
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ldontmove:
                 dec xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -2690,7 +2690,7 @@ Rotate_J PROC,lr:byte
                     jmp _2ltest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest2:
                 inc xpos
@@ -2701,7 +2701,7 @@ Rotate_J PROC,lr:byte
                     jmp _2ltest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest3:
                 inc ypos
@@ -2712,7 +2712,7 @@ Rotate_J PROC,lr:byte
                     jmp _2ltest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest4:
                 dec xpos
@@ -2724,7 +2724,7 @@ Rotate_J PROC,lr:byte
                     jmp _2ltest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest5:
                 inc xpos
@@ -2737,12 +2737,12 @@ Rotate_J PROC,lr:byte
                     jmp _2ldontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ldontmove:
                 dec xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==3
@@ -2753,7 +2753,7 @@ Rotate_J PROC,lr:byte
                     jmp _3ltest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest2:
                 dec xpos
@@ -2762,7 +2762,7 @@ Rotate_J PROC,lr:byte
                     jmp _3ltest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest3:
                 dec ypos
@@ -2773,7 +2773,7 @@ Rotate_J PROC,lr:byte
                     jmp _3ltest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest4:
                 inc xpos
@@ -2785,7 +2785,7 @@ Rotate_J PROC,lr:byte
                     jmp _3ltest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest5:
                 dec xpos
@@ -2797,12 +2797,12 @@ Rotate_J PROC,lr:byte
                     jmp _3ldontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ldontmove:
                 inc xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==4
@@ -2813,7 +2813,7 @@ Rotate_J PROC,lr:byte
                     jmp _4ltest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest2:
                 dec xpos
@@ -2822,7 +2822,7 @@ Rotate_J PROC,lr:byte
                     jmp _4ltest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest3:
                 dec ypos
@@ -2833,7 +2833,7 @@ Rotate_J PROC,lr:byte
                     jmp _4ltest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest4:
                 inc xpos
@@ -2843,7 +2843,7 @@ Rotate_J PROC,lr:byte
                     jmp _4ltest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest5:
                 dec xpos
@@ -2855,12 +2855,12 @@ Rotate_J PROC,lr:byte
                     jmp _4ldontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret                
             _4ldontmove:
                 inc xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
     .ENDIF
@@ -2875,7 +2875,7 @@ Rotate_L PROC,lr:byte
                     jmp _1rtest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest2:
                 dec xpos
@@ -2884,7 +2884,7 @@ Rotate_L PROC,lr:byte
                     jmp _1rtest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest3:
                 dec ypos
@@ -2895,7 +2895,7 @@ Rotate_L PROC,lr:byte
                     jmp _1rtest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest4:
                 inc xpos
@@ -2907,7 +2907,7 @@ Rotate_L PROC,lr:byte
                     jmp _1rtest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest5:
                 dec xpos
@@ -2918,12 +2918,12 @@ Rotate_L PROC,lr:byte
                     jmp _1rdontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rdontmove:
                 inc xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -2934,7 +2934,7 @@ Rotate_L PROC,lr:byte
                     jmp _2rtest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest2:
                 inc xpos
@@ -2945,7 +2945,7 @@ Rotate_L PROC,lr:byte
                     jmp _2rtest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest3:
                 inc ypos
@@ -2958,7 +2958,7 @@ Rotate_L PROC,lr:byte
                     jmp _2rtest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest4:
                 dec xpos
@@ -2970,7 +2970,7 @@ Rotate_L PROC,lr:byte
                     jmp _2rtest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest5:
                 inc xpos
@@ -2983,12 +2983,12 @@ Rotate_L PROC,lr:byte
                     jmp _2rdontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rdontmove:
                 dec xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==3
@@ -2999,7 +2999,7 @@ Rotate_L PROC,lr:byte
                     jmp _3rtest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest2:
                 inc xpos
@@ -3008,7 +3008,7 @@ Rotate_L PROC,lr:byte
                     jmp _3rtest3
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest3:
                 dec ypos
@@ -3019,7 +3019,7 @@ Rotate_L PROC,lr:byte
                     jmp _3rtest4
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest4:
                 dec xpos
@@ -3031,7 +3031,7 @@ Rotate_L PROC,lr:byte
                     jmp _3rtest5
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest5:
                 inc xpos
@@ -3042,7 +3042,7 @@ Rotate_L PROC,lr:byte
                     jmp _3rdontmove
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rdontmove:
         .ENDIF
@@ -3054,7 +3054,7 @@ Rotate_L PROC,lr:byte
                     jmp _4rtest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest2:
                 dec xpos
@@ -3065,7 +3065,7 @@ Rotate_L PROC,lr:byte
                     jmp _4rtest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest3:
                 inc ypos
@@ -3076,7 +3076,7 @@ Rotate_L PROC,lr:byte
                     jmp _4rtest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest4:
                 inc xpos
@@ -3088,7 +3088,7 @@ Rotate_L PROC,lr:byte
                     jmp _4rtest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest5:
                 dec xpos
@@ -3101,25 +3101,25 @@ Rotate_L PROC,lr:byte
                     jmp _4rdontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rdontmove:
                 inc xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction==1
             _1ltest1:
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'.'
                 invoke Collision_block,4
                 .IF collisioned==0
                     jmp _1ltest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest2:
                 inc xpos
@@ -3128,7 +3128,7 @@ Rotate_L PROC,lr:byte
                     jmp _1ltest3
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest3:
                 dec ypos
@@ -3139,7 +3139,7 @@ Rotate_L PROC,lr:byte
                     jmp _1ltest4
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest4:
                 dec xpos
@@ -3148,10 +3148,10 @@ Rotate_L PROC,lr:byte
                 jg _1ltest5
                 invoke Collision_block,4
                 .IF collisioned==0
-                    jmp _1ltest2
+                    jmp _1ltest5
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest5:
                 inc xpos
@@ -3162,12 +3162,12 @@ Rotate_L PROC,lr:byte
                     jmp _1ldontmove
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ldontmove:
                 dec xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -3178,7 +3178,7 @@ Rotate_L PROC,lr:byte
                     jmp _2ltest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest2:
                 inc xpos
@@ -3189,7 +3189,7 @@ Rotate_L PROC,lr:byte
                     jmp _2ltest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest3:
                 inc ypos
@@ -3200,7 +3200,7 @@ Rotate_L PROC,lr:byte
                     jmp _2ltest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest4:
                 dec xpos
@@ -3212,7 +3212,7 @@ Rotate_L PROC,lr:byte
                     jmp _2ltest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest5:
                 inc xpos
@@ -3225,22 +3225,23 @@ Rotate_L PROC,lr:byte
                     jmp _2ldontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ldontmove:
                 dec xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==3
             _3ltest1:
+                invoke Drawplayer,'.'
                 invoke Collision_block,2
                 .IF collisioned==0
                     jmp _3ltest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
 
             _3ltest2:
@@ -3250,7 +3251,7 @@ Rotate_L PROC,lr:byte
                     jmp _3ltest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest3:
                 dec ypos
@@ -3261,7 +3262,7 @@ Rotate_L PROC,lr:byte
                     jmp _3ltest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest4:
                 inc xpos
@@ -3273,7 +3274,7 @@ Rotate_L PROC,lr:byte
                     jmp _3ltest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ltest5:
                 dec xpos
@@ -3284,12 +3285,12 @@ Rotate_L PROC,lr:byte
                     jmp _3ldontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3ldontmove:
                 inc xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==4
@@ -3300,7 +3301,7 @@ Rotate_L PROC,lr:byte
                     jmp _4ltest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest2:
                 dec xpos
@@ -3311,7 +3312,7 @@ Rotate_L PROC,lr:byte
                     jmp _4ltest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest3:
                 inc ypos
@@ -3324,7 +3325,7 @@ Rotate_L PROC,lr:byte
                     jmp _4ltest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest4:
                 inc xpos
@@ -3336,7 +3337,7 @@ Rotate_L PROC,lr:byte
                     jmp _4ltest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ltest5:
                 dec xpos
@@ -3349,12 +3350,12 @@ Rotate_L PROC,lr:byte
                     jmp _4ldontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4ldontmove:
                 inc xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
     .ENDIF
@@ -3369,7 +3370,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _1rtest2
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest2:
                 dec xpos
@@ -3378,7 +3379,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _1rtest3
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest3:
                 dec ypos
@@ -3389,7 +3390,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _1rtest4
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest4:                
                 inc xpos
@@ -3401,7 +3402,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _1rtest5
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rtest5:
                 dec xpos
@@ -3412,13 +3413,13 @@ Rotate_Z PROC,lr:Byte
                     jmp _1rdontmove
                 .ENDIF
                 mov direction,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1rdontmove:
                 mov direction,1
                 inc xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -3429,7 +3430,7 @@ Rotate_Z PROC,lr:Byte
                 jmp _2rtest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest2:
                 inc xpos
@@ -3440,7 +3441,7 @@ Rotate_Z PROC,lr:Byte
                 jmp _2rtest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest3:
                 inc ypos
@@ -3453,7 +3454,7 @@ Rotate_Z PROC,lr:Byte
                 jmp _2rtest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest4:
                 dec xpos
@@ -3465,7 +3466,7 @@ Rotate_Z PROC,lr:Byte
                 jmp _2rtest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rtest5:
                 inc xpos
@@ -3478,12 +3479,12 @@ Rotate_Z PROC,lr:Byte
                 jmp _2rdontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2rdontmove:
                 add ypos,3
                 dec xpos
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==3
@@ -3494,7 +3495,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _3rtest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest2:
                 inc xpos
@@ -3503,7 +3504,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _3rtest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest3:
                 dec ypos
@@ -3514,7 +3515,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _3rtest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest4:
                 dec xpos
@@ -3526,7 +3527,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _3rtest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rtest5:
                 inc xpos
@@ -3537,12 +3538,12 @@ Rotate_Z PROC,lr:Byte
                     jmp _3rdontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _3rdontmove:
                 dec xpos
                 sub ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==4
@@ -3553,7 +3554,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _4rtest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest2:
                 dec xpos
@@ -3564,7 +3565,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _4rtest3
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest3:
                 inc ypos
@@ -3575,7 +3576,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _4rtest4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest4:
                 inc xpos
@@ -3587,7 +3588,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _4rtest5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rtest5:
                 dec xpos
@@ -3600,12 +3601,12 @@ Rotate_Z PROC,lr:Byte
                     jmp _4rdontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _4rdontmove:
                 inc xpos
                 add ypos,2
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
     .ENDIF
@@ -3618,7 +3619,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _1ltest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest2:
                 inc xpos
@@ -3627,7 +3628,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _1ltest3
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest3:   
                 dec ypos
@@ -3638,7 +3639,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _1ltest4
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest4:
                 dec xpos
@@ -3650,7 +3651,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _1ltest5
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ltest5:
                 inc xpos
@@ -3661,12 +3662,12 @@ Rotate_Z PROC,lr:Byte
                     jmp _1ldontmove
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _1ldontmove:
                 dec xpos
                 sub ypos,3
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
         .IF direction==2
@@ -3677,7 +3678,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _2ltest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ltest2:
                 inc xpos
@@ -3688,7 +3689,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _2ltest2
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
 
             _2ltest3:
@@ -3700,7 +3701,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _2ltest2;=4
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
 
             _2ltest4:
@@ -3713,7 +3714,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _2ltest2;=5
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
 
             _2ltest5:
@@ -3727,7 +3728,7 @@ Rotate_Z PROC,lr:Byte
                     jmp _2ldontmove
                 .ENDIF
                 mov direction,1
-                invoke Drawplayer,'x'
+                invoke Drawplayer,'X'
                 ret
             _2ldontmove:
                 dec xpos
