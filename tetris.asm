@@ -11,9 +11,9 @@ Rotate_Z PROTO,lr:byte
 Rotate_L PROTO,lr:byte
 Collision_block PROTO,dir:byte
 Drop_block PROTO,dir:byte
+Score_counting PROTO
 Draw PROTO
 Generate_block PROTO
-Remove_block PROTO
 DrawTitle PROTO
 DrawButton1 PROTO,State:byte
 DrawButtonExit PROTO,State:byte
@@ -21,6 +21,13 @@ SwitchButtonState1 PROTO
 SwitchButtonState2 PROTO
 DrawHintWord1 PROTO ;titleHintWord
 DrawHintWord2 PROTO ;titleHintWord
+DrawHintWord3 PROTO ;a move left
+DrawHintWord4 PROTO ;s move down
+DrawHintWord5 PROTO ;d move right
+DrawHintWord6 PROTO ;j rotate left
+DrawHintWord7 PROTO ;k rotate right
+DrawHintWord8 PROTO ;space move bottom
+DrawHintWord9 PROTO ;press a to continue
 DrawEndTitle PROTO
 DrawReplayButton PROTO,State:byte
 DrawExitButton PROTO,State:byte
@@ -42,21 +49,42 @@ ButtonTop    BYTE 0DAh, (Buttonwidth - 2) DUP(0C4h), 0BFh
 ButtonBody1   BYTE 0B3h, (3) DUP(' '), 'S', 'T', 'A', 'R', 'T', (3) DUP(' '), 0B3h ;STARTButton
 ButtonBody2   BYTE 0B3h, (4) DUP(' '), 'E', 'X', 'I', 'T', (3) DUP(' '), 0B3h ;EXITButton
 ButtonBody3   BYTE 0B3h, (2) DUP(' '), 'R', 'E', 'P', 'L', 'A', 'Y', (3) DUP(' '), 0B3h ;ReplayButton
-HintText1   BYTE 'w', ' ', 'o', 'r', ' ', 's', ' ', 't', 'o', 's', 'w', 'i', 't', 'c', 'h', ' ', 'b', 'u', 't', 't', 'o', 'n', 's' ;HintText1 23
+HintText1   BYTE 'w', ' ', 'o', 'r', ' ', 's', ' ', 't', 'o', ' ', 's', 'w', 'i', 't', 'c', 'h', ' ', 'b', 'u', 't', 't', 'o', 'n', 's' ;w or s to switch buttons 24
 HintText2   BYTE 's', 'p', 'a', 'c', 'e', ' ', 't', 'o', ' ', 'c', 'o', 'n', 'f', 'i', 'r', 'm' ;HintText2 16
+HintText3   BYTE 'a', ' ', 'm', 'o', 'v', 'e', ' ', 'l', 'e', 'f', 't' ;HintText3 11
+HintText4   BYTE 's', ' ', 'm', 'o', 'v', 'e', ' ', 'd', 'o', 'w', 'n' ;HintText4 11
+HintText5   BYTE 'd', ' ', 'm', 'o', 'v', 'e', ' ', 'r', 'i', 'g', 'h', 't' ;HintText5 12
+HintText6   BYTE 'j', ' ', 'r', 'o', 't', 'a', 't', 'e', ' ', 'l', 'e', 'f', 't' ;HintText6 13
+HintText7   BYTE 'k', ' ', 'r', 'o', 't', 'a', 't', 'e', ' ', 'r', 'i', 'g', 'h', 't' ;HintText7 14
+HintText8   BYTE 's', 'p', 'a', 'c', 'e', ' ', 'm', 'o', 'v', 'e', ' ', 'b', 'o', 't', 't', 'o', 'm' ;HintText8 17
+HintText9   BYTE 'p', 'r', 'e', 's', 's', ' ', 'a', ' ', 't', 'o', ' ', 'c', 'o', 'n', 't', 'i', 'n', 'u', 'e' ;HintText9 19  
 ButtonBottom BYTE 0C0h, (Buttonwidth - 2) DUP(0C4h), 0D9h
 outputHandle DWORD 0
 bytesWritten DWORD 0
-attributes0 WORD TitleWidth DUP(0Ch)
-attributes1 WORD ButtonWidth DUP(0Ch)
-attributes2 WORD ButtonWidth DUP(0Fh)
-attributes3 WORD 23 DUP(0Fh)
-attributes4 WORD 16 DUP(0Fh)
-xyPosition0 COORD <3,4>
-xyPosition1 COORD <10,12>
-xyPosition2 COORD <10,17>
-xyPosition3 COORD <4,20>
-xyPosition4 COORD <9,21>
+attributes0  WORD TitleWidth DUP(0Ch);title
+attributes1  WORD ButtonWidth DUP(0Ch);titleStart
+attributes2  WORD ButtonWidth DUP(0Fh);titleExit
+attributes3  WORD 24 DUP(0Fh);titleHintWord
+attributes4  WORD 16 DUP(0Fh)
+attributes5  WORD 11 DUP(0Fh);totorielStart
+attributes6  WORD 11 DUP(0Fh)
+attributes7  WORD 12 DUP(0Fh)
+attributes8  WORD 13 DUP(0Fh)
+attributes9  WORD 14 DUP(0Fh)
+attributes10 WORD 17 DUP(0Fh)
+attributes11 WORD 19 DUP(0Fh);totorielEnd
+xyPosition0  COORD <3,4>;title
+xyPosition1  COORD <10,12>;titleStart
+xyPosition2  COORD <10,17>;titleExit
+xyPosition3  COORD <4,20>;titleHintWord
+xyPosition4  COORD <9,21>
+xyPosition5  COORD <9,10>;totorielStart
+xyPosition6  COORD <9,11>
+xyPosition7  COORD <9,12>
+xyPosition8  COORD <9,13>
+xyPosition9  COORD <9,14>
+xyPosition10 COORD <9,15>
+xyPosition11 COORD <4,18>;totorielEnd
 cellsWritten DWORD ?
 xpos BYTE 4
 ypos BYTE 1
@@ -66,6 +94,9 @@ block_type byte 'O';indicate what kind of block player is controling I O J L S Z
 direction byte 1
 player Byte 22 dup('..........',0),2 dup('xxxxxxxxxx',0);?h?X??????O ???@?}?l???????m
 collisioned Byte 1  ;to check if it is collision, 1 means not collision, 0 means collision
+score DWORD 0
+row_num Byte 0
+score_msg db 'Score: ', 0
 hConsoleInput HANDLE 0
 temp BYTE 0
 .code
@@ -99,12 +130,31 @@ Buttons:
     .ELSEIF al == ' '
         .IF Button1_State == 1
             pop eax
-            jmp gameloop_out
+            jmp TotorielDraw
         .ELSEIF ButtonExit1_State == 1
             exit
         .ENDIF
     .ENDIF
     loop Buttons
+TotorielDraw:
+    call Clrscr
+    invoke DrawHintWord3
+    invoke DrawHintWord4
+    invoke DrawHintWord5
+    invoke DrawHintWord6
+    invoke DrawHintWord7
+    invoke DrawHintWord8
+    invoke DrawHintWord9
+TotorielCheck:
+    mov eax, 500
+    call Delay
+    push eax
+    call ReadKey
+    .IF al == 'a'
+        pop eax
+        jmp gameloop_out
+    .ENDIF
+    loop TotorielCheck
 gameloop_out:
     call Clrscr
     mov collisioned, 1
@@ -153,6 +203,7 @@ gameover:
 main ENDP
 
 RemoveBlock PROC
+    mov row_num, 0
     mov eax, 0
     mov esi, 0
 check_row:
@@ -177,6 +228,7 @@ remove_row:
         .ENDIF
         mov ecx, 10
 add_empty_row:
+        inc row_num
         mov player[edx], '.'
         add edx, 1
         loop add_empty_row
@@ -185,9 +237,22 @@ add_empty_row:
     add esi, 1
     jmp check_row
 end_remove:
+    invoke Score_counting
     ret
 RemoveBlock ENDP
-
+Score_counting PROC
+    .IF row_num == 10
+        add score, 40
+    .ELSEIF row_num == 20
+        add score, 100
+    .ELSEIF row_num == 30
+        add score, 300
+    .ELSEIF row_num == 40
+        add score, 1200
+    .ENDIF
+    mov row_num, 0
+    ret
+Score_counting ENDP
 DrawTitle PROC
     sub xyPosition0.y, 4 
     INVOKE WriteConsoleOutputAttribute,
@@ -478,14 +543,14 @@ DrawHintWord1 PROC
     INVOKE WriteConsoleOutputAttribute,
         outputHandle, 
         ADDR attributes3,
-        23, 
+        24, 
         xyPosition3,
         ADDR cellsWritten
         
     INVOKE WriteConsoleOutputCharacter,
         outputHandle,	; console output handle
         ADDR HintText1,	; pointer to the bottom of the box
-        23,	; size of box line
+        24,	; size of box line
         xyPosition3,	; coordinates of first char
         ADDR cellsWritten	; output count
     ret
@@ -507,7 +572,124 @@ DrawHintWord2 PROC
         ADDR cellsWritten	; output count
     ret
 DrawHintWord2 ENDP
+DrawHintWord3 PROC
+    INVOKE WriteConsoleOutputAttribute,
+        outputHandle, 
+        ADDR attributes5,
+        11, 
+        xyPosition5,
+        ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+        outputHandle,	; console output handle
+        ADDR HintText3,	; pointer to the bottom of the box
+        11,	; size of box line
+        xyPosition5,	; coordinates of first char
+        ADDR cellsWritten	; output count
+    ret
+DrawHintWord3 ENDP
 
+DrawHintWord4 PROC
+    INVOKE WriteConsoleOutputAttribute,
+        outputHandle, 
+        ADDR attributes6,
+        11, 
+        xyPosition6,
+        ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+        outputHandle,	; console output handle
+        ADDR HintText4,	; pointer to the bottom of the box
+        11,	; size of box line
+        xyPosition6,	; coordinates of first char
+        ADDR cellsWritten	; output count
+    ret
+DrawHintWord4 ENDP
+
+DrawHintWord5 PROC
+    INVOKE WriteConsoleOutputAttribute,
+        outputHandle, 
+        ADDR attributes7,
+        12, 
+        xyPosition7,
+        ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+        outputHandle,	; console output handle
+        ADDR HintText5,	; pointer to the bottom of the box
+        12,	; size of box line
+        xyPosition7,	; coordinates of first char
+        ADDR cellsWritten	; output count
+    ret
+DrawHintWord5 ENDP
+
+DrawHintWord6 PROC
+    INVOKE WriteConsoleOutputAttribute,
+        outputHandle, 
+        ADDR attributes8,
+        13, 
+        xyPosition8,
+        ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+        outputHandle,	; console output handle
+        ADDR HintText6,	; pointer to the bottom of the box
+        13,	; size of box line
+        xyPosition8,	; coordinates of first char
+        ADDR cellsWritten	; output count
+    ret
+DrawHintWord6 ENDP
+
+DrawHintWord7 PROC
+    INVOKE WriteConsoleOutputAttribute,
+        outputHandle, 
+        ADDR attributes9,
+        14, 
+        xyPosition9,
+        ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+        outputHandle,	; console output handle
+        ADDR HintText7,	; pointer to the bottom of the box
+        14,	; size of box line
+        xyPosition9,	; coordinates of first char
+        ADDR cellsWritten	; output count
+    ret
+DrawHintWord7 ENDP
+
+DrawHintWord8 PROC
+    INVOKE WriteConsoleOutputAttribute,
+        outputHandle, 
+        ADDR attributes10,
+        17, 
+        xyPosition10,
+        ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+        outputHandle,	; console output handle
+        ADDR HintText8,	; pointer to the bottom of the box
+        17,	; size of box line
+        xyPosition10,	; coordinates of first char
+        ADDR cellsWritten	; output count
+    ret
+DrawHintWord8 ENDP
+
+DrawHintWord9 PROC
+    INVOKE WriteConsoleOutputAttribute,
+        outputHandle, 
+        ADDR attributes11,
+        19, 
+        xyPosition11,
+        ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+        outputHandle,	; console output handle
+        ADDR HintText9,	; pointer to the bottom of the box
+        19,	; size of box line
+        xyPosition11,	; coordinates of first char
+        ADDR cellsWritten	; output count
+    ret
+DrawHintWord9 ENDP
 DrawEndTitle PROC
     sub xyPosition0.y, 4 
     INVOKE WriteConsoleOutputAttribute,
@@ -1107,6 +1289,16 @@ Draw PROC
         loop L
     ;call ReadChar
     pop ecx
+    ;output the score
+    push dx
+    push eax
+    lea dx, score_msg
+    call writestring
+    mov eax, score
+    call writedec
+    call Crlf
+    pop eax
+    pop dx
     ret
 Draw ENDP
 Collision_block PROC,dir:byte ; 0 collide 1 safe to place
@@ -1583,32 +1775,6 @@ Move_block PROC, move_type: BYTE
     invoke Draw
     ret
 Move_block ENDP
-; Remove_block PROC
-;     mov edx, OFFSET player
-;     push ecx
-;     mov ecx, 22
-; L1:
-;     push ecx
-;     mov ecx, 10
-; L2:
-;     cmp BYTE PTR [edx],'.'
-;     je L3
-;     cmp ecx, 1
-;     je L4
-;     loop L2
-; L3:
-;     add edx, ecx
-;     pop ecx
-;     loop L1
-;     pop ecx
-;     ret
-; L4:
-;     pop ecx
-;     22 - ecx
-;     loop L4
-;     loop L1
-;     ret
-; Remove_block ENDP
 Rotate_block PROC,lr:byte
     .IF block_type=='I'
         invoke Rotate_I,lr
