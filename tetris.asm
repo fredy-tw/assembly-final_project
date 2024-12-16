@@ -17,7 +17,8 @@ Remove_block PROTO
 DrawTitle PROTO
 DrawButton1 PROTO,State:byte
 DrawButtonExit PROTO,State:byte
-CheckState PROTO
+SwitchButtonState1 PROTO
+SwitchButtonState2 PROTO
 DrawHintWord1 PROTO ;titleHintWord
 DrawHintWord2 PROTO ;titleHintWord
 DrawEndTitle PROTO
@@ -88,11 +89,11 @@ Buttons:
     push eax
     call ReadKey
     .IF al == 'w'
-        call CheckState
+        invoke SwitchButtonState1
         pop eax
         loop Buttons
     .ELSEIF al == 's'
-        call CheckState
+        invoke SwitchButtonState1
         pop eax
         loop Buttons
     .ELSEIF al == ' '
@@ -444,7 +445,7 @@ DrawButtonExit PROC, State:Byte
     ret
 DrawButtonExit ENDP
 
-CheckState PROC
+SwitchButtonState1 PROC
     .IF Button1_State == 1
         dec Button1_State
         inc ButtonExit1_State
@@ -453,7 +454,18 @@ CheckState PROC
         dec ButtonExit1_State
     .ENDIF
     ret
-CheckState ENDP
+SwitchButtonState1 ENDP
+
+SwitchButtonState2 PROC
+    .IF ButtonReplay_State == 1
+        dec ButtonReplay_State
+        inc ButtonExit2_State
+    .ELSEIF ButtonReplay_State == 0
+        inc ButtonReplay_State
+        dec ButtonExit2_State
+    .ENDIF
+    ret
+SwitchButtonState2 ENDP
 
 DrawHintWord1 PROC
     INVOKE WriteConsoleOutputAttribute,
