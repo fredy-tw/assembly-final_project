@@ -2049,7 +2049,7 @@ Rotate_I PROC,lr:byte
         .IF direction==1
             _1ltest1:
                 invoke Drawplayer,'.'
-                dec ypos
+                inc ypos
                 invoke Collision_block,4
                 .IF collisioned == 0
                     jmp _1ltest2
@@ -2057,7 +2057,6 @@ Rotate_I PROC,lr:byte
                 mov direction,4
                 invoke Drawplayer,'X'
                 ret
-                
             _1ltest2:
                 dec xpos
                 invoke Collision_block,4
@@ -2110,6 +2109,7 @@ Rotate_I PROC,lr:byte
         .IF direction==2
             _2ltest1:
                 dec xpos
+
                 invoke Collision_block,1
                 .IF collisioned == 0
                     jmp _2ltest2
@@ -3775,11 +3775,6 @@ Rotate_J PROC,lr:byte
     .ENDIF
 Rotate_J ENDP
 Rotate_L PROC,lr:byte
-    ; inc direction
-    ; .IF direction==5
-    ;     mov direction,1
-    ; .ENDIF
-    ; ret
     .IF lr=='r'
         .IF direction==1
             _1rtest1:
