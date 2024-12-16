@@ -76,7 +76,27 @@ main PROC
 Buttons:
     invoke DrawButton1, Button1_State
     invoke DrawButtonExit, ButtonExit_State
-    invoke CheckState
+    mov eax, 200
+    call Delay
+    push eax
+    call ReadKey
+    .IF al == 'w'
+        call CheckState
+        pop eax
+        loop Buttons
+    .ELSEIF al == 's'
+        call CheckState
+        pop eax
+        loop Buttons
+    .ELSEIF al == ' '
+        .IF Button1_State == 1
+            pop eax
+            jmp gameloop_out
+        .ELSEIF ButtonExit_State == 1
+            exit
+        .ENDIF
+    .ENDIF
+    loop Buttons
 gameloop_out:
     call Clrscr
     mov collisioned, 1
