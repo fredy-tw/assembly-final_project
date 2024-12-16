@@ -522,10 +522,10 @@ DrawButtonExit ENDP
 SwitchButtonState1 PROC
     .IF Button1_State == 1
         dec Button1_State
-        inc ButtonExit11_State
+        inc ButtonExit1_State
     .ELSEIF Button1_State == 0
         inc Button1_State
-        dec ButtonExit11_State
+        dec ButtonExit1_State
     .ENDIF
     ret
 SwitchButtonState1 ENDP
