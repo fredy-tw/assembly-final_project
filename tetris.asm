@@ -17,9 +17,7 @@ Remove_block PROTO
 DrawTitle PROTO
 DrawButton1 PROTO,State:byte
 DrawButtonExit PROTO,State:byte
-CheckState PROTO
-DrawHintWord1 PROTO
-DrawHintWord2 PROTO
+;CheckState PROTO
 TitleWidth = 26
 TitleHeight = 7
 Buttonwidth = 13
@@ -35,20 +33,14 @@ ButtonTop    BYTE 0DAh, (Buttonwidth - 2) DUP(0C4h), 0BFh
 ButtonBody1   BYTE 0B3h, (3) DUP(' '), 'S', 'T', 'A', 'R', 'T', (3) DUP(' '), 0B3h ;STARTButton
 ButtonBody2   BYTE 0B3h, (4) DUP(' '), 'E', 'X', 'I', 'T', (3) DUP(' '), 0B3h ;EXITButton
 ButtonBottom BYTE 0C0h, (Buttonwidth - 2) DUP(0C4h), 0D9h
-HintText1   BYTE 'w', ' ', 'o', 'r', ' ', 's', ' ', 't', 'o', 's', 'w', 'i', 't', 'c', 'h', ' ', 'b', 'u', 't', 't', 'o', 'n', 's' ;HintText1 23
-HintText2   BYTE 's', 'p', 'a', 'c', 'e', ' ', 't', 'o', ' ', 'c', 'o', 'n', 'f', 'i', 'r', 'm' ;HintText2 16
 outputHandle DWORD 0
 bytesWritten DWORD 0
 attributes0 WORD TitleWidth DUP(0Ch)
 attributes1 WORD ButtonWidth DUP(0Ch)
 attributes2 WORD ButtonWidth DUP(0Fh)
-attributes3 WORD 23 DUP(0Fh)
-attributes4 WORD 16 DUP(0Fh)
 xyPosition0 COORD <3,4>
 xyPosition1 COORD <10,12>
 xyPosition2 COORD <10,17>
-xyPosition3 COORD <4,20>
-xyPosition4 COORD <9,21>
 cellsWritten DWORD ?
 xpos BYTE 4
 ypos BYTE 1
@@ -71,32 +63,10 @@ main PROC
     ;mov eax,red+(blue*16) ;?]?w?C?? ?I????? ????i?H?H?K??
     ;call SetTextColor
     invoke DrawTitle
-    invoke DrawHintWord1
-    invoke DrawHintWord2
 Buttons:
     invoke DrawButton1, Button1_State
     invoke DrawButtonExit, ButtonExit_State
-    mov eax, 200
-    call Delay
-    push eax
-    call ReadKey
-    .IF al == 'w'
-        call CheckState
-        pop eax
-        loop Buttons
-    .ELSEIF al == 's'
-        call CheckState
-        pop eax
-        loop Buttons
-    .ELSEIF al == ' '
-        .IF Button1_State == 1
-            pop eax
-            jmp gameloop_out
-        .ELSEIF ButtonExit_State == 1
-            exit
-        .ENDIF
-    .ENDIF
-    loop Buttons
+    ;invoke CheckState
 gameloop_out:
     call Clrscr
     mov collisioned, 1
@@ -432,55 +402,14 @@ DrawButtonExit PROC, State:Byte
             ButtonWidth,	; size of box line
             xyPosition2,	; coordinates of first char
             ADDR cellsWritten	; output count
-        ret
+            ret
     .ENDIF
     ret
 DrawButtonExit ENDP
 
-CheckState PROC
-    .IF Button1_State == 1
-        dec Button1_State
-        inc ButtonExit_State
-    .ELSEIF Button1_State == 0
-        inc Button1_State
-        dec ButtonExit_State
-    .ENDIF
-    ret
-CheckState ENDP
-
-DrawHintWord1 PROC
-    INVOKE WriteConsoleOutputAttribute,
-        outputHandle, 
-        ADDR attributes3,
-        23, 
-        xyPosition3,
-        ADDR cellsWritten
-        
-    INVOKE WriteConsoleOutputCharacter,
-        outputHandle,	; console output handle
-        ADDR HintText1,	; pointer to the bottom of the box
-        23,	; size of box line
-        xyPosition3,	; coordinates of first char
-        ADDR cellsWritten	; output count
-    ret
-DrawHintWord1 ENDP
-
-DrawHintWord2 PROC
-    INVOKE WriteConsoleOutputAttribute,
-        outputHandle, 
-        ADDR attributes4,
-        16, 
-        xyPosition4,
-        ADDR cellsWritten
-        
-    INVOKE WriteConsoleOutputCharacter,
-        outputHandle,	; console output handle
-        ADDR HintText2,	; pointer to the bottom of the box
-        16,	; size of box line
-        xyPosition4,	; coordinates of first char
-        ADDR cellsWritten	; output count
-    ret
-DrawHintWord2 ENDP
+;CheckState PROC
+;
+;CheckState ENDP
 
 Generate_block PROC
     mov xpos, 4
@@ -1592,6 +1521,7 @@ Rotate_S PROC,lr:byte
                 dec xpos
                 add ypos,2
                 invoke Drawplayer,'X'
+                ret
             .ENDIF
         .IF direction==3
             _3rtest1:
@@ -1714,6 +1644,7 @@ Rotate_S PROC,lr:byte
                 inc xpos
                 add ypos,2
                 invoke Drawplayer,'X'
+                ret
         .ENDIF
     .ENDIF
     .IF lr=='l'
@@ -1958,6 +1889,7 @@ Rotate_S PROC,lr:byte
             _4ldontmove:
                 inc xpos
                 add ypos,2
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
     .ENDIF
@@ -2020,6 +1952,10 @@ Rotate_T PROC,lr:byte
                 invoke Drawplayer,'X'
                 ret
             _1rdontmove:
+                inc xpos
+                sub ypos,2
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
         .IF direction==2
             _2rtest1:
@@ -2451,6 +2387,10 @@ Rotate_T PROC,lr:byte
                 invoke Drawplayer,'X'
                 ret
             _4ldontmove:
+                inc xpos
+                add ypos,2
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
     .ENDIF
 Rotate_T ENDP
@@ -3116,6 +3056,10 @@ Rotate_L PROC,lr:byte
                 invoke Drawplayer,'X'
                 ret
             _3rdontmove:
+                dec xpos
+                sub ypos,3
+                invoke Drawplayer,'X'
+                ret
         .ENDIF
         .IF direction==4
             _4rtest1:
@@ -3388,7 +3332,7 @@ Rotate_L PROC,lr:byte
             _4ltest3:
                 inc ypos
                 cmp xpos,2
-                jl _4ltest3
+                jl _4ltest4
                 cmp ypos,21
                 jg _4ltest4
                 invoke Collision_block,3
@@ -3430,6 +3374,7 @@ Rotate_L PROC,lr:byte
                 ret
         .ENDIF
     .ENDIF
+    ret
 Rotate_L ENDP
 Rotate_Z PROC,lr:Byte                                
     .IF lr=='r'
@@ -3929,6 +3874,7 @@ Rotate_Z PROC,lr:Byte
             _4ldontmove:
                 inc xpos
                 add ypos,2
+                invoke Drawplayer,'X'
                 ret
         .ENDIF
     .ENDIF
