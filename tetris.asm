@@ -572,6 +572,7 @@ DrawHintWord2 PROC
         ADDR cellsWritten	; output count
     ret
 DrawHintWord2 ENDP
+
 DrawHintWord3 PROC
     INVOKE WriteConsoleOutputAttribute,
         outputHandle, 
