@@ -18,22 +18,29 @@ DrawTitle PROTO
 DrawButton1 PROTO,State:byte
 DrawButtonExit PROTO,State:byte
 CheckState PROTO
-DrawHintWord1 PROTO
-DrawHintWord2 PROTO
+DrawHintWord1 PROTO ;titleHintWord
+DrawHintWord2 PROTO ;titleHintWord
+DrawEndTitle PROTO
+DrawReplayButton PROTO,State:byte
+DrawExitButton PROTO,State:byte
 TitleWidth = 26
 TitleHeight = 7
 Buttonwidth = 13
 ButtonHeight = 3
 .data
-Button1_State Byte 1
-ButtonExit_State Byte 0
+Button1_State Byte 1  ;StartTitle's StartButton
+ButtonExit1_State Byte 0  ;StartTitle's ExitButton
+ButtonReplay_State Byte 1  ;EndTitle's ReplayButton 
+ButtonExit2_State Byte 0 ;EndTitle's ExitButton
 TitleTop    BYTE 0DAh, (TitleWidth - 2) DUP(0C4h), 0BFh 
 TitleBody1   BYTE 0B3h, (9) DUP(' '), 'T', 'E', 'T', 'R', 'I', 'S', (9) DUP(' '), 0B3h ;TETRIS_TITLE
 TitleBody2   BYTE 0B3h, (TitleWidth-2) DUP(' '), 0B3h ;STARTButton
+TitleBody3   BYTE 0B3h, (8) DUP(' '), 'G', 'A', 'M', 'E', 'O', 'V', 'E', 'R', (8) DUP(' '), 0B3h ;TETRIS_TITLE
 TitleBottom BYTE 0C0h, (TitleWidth - 2) DUP(0C4h), 0D9h
 ButtonTop    BYTE 0DAh, (Buttonwidth - 2) DUP(0C4h), 0BFh 
 ButtonBody1   BYTE 0B3h, (3) DUP(' '), 'S', 'T', 'A', 'R', 'T', (3) DUP(' '), 0B3h ;STARTButton
 ButtonBody2   BYTE 0B3h, (4) DUP(' '), 'E', 'X', 'I', 'T', (3) DUP(' '), 0B3h ;EXITButton
+ButtonBody3   BYTE 0B3h, (2) DUP(' '), 'R', 'E', 'P', 'L', 'A', 'Y', (3) DUP(' '), 0B3h ;ReplayButton
 HintText1   BYTE 'w', ' ', 'o', 'r', ' ', 's', ' ', 't', 'o', 's', 'w', 'i', 't', 'c', 'h', ' ', 'b', 'u', 't', 't', 'o', 'n', 's' ;HintText1 23
 HintText2   BYTE 's', 'p', 'a', 'c', 'e', ' ', 't', 'o', ' ', 'c', 'o', 'n', 'f', 'i', 'r', 'm' ;HintText2 16
 ButtonBottom BYTE 0C0h, (Buttonwidth - 2) DUP(0C4h), 0D9h
@@ -73,9 +80,9 @@ main PROC
     invoke DrawTitle
     invoke DrawHintWord1
     invoke DrawHintWord2
-    Buttons:
+Buttons:
     invoke DrawButton1, Button1_State
-    invoke DrawButtonExit, ButtonExit_State
+    invoke DrawButtonExit, ButtonExit1_State
     mov eax, 200
     call Delay
     push eax
@@ -92,7 +99,7 @@ main PROC
         .IF Button1_State == 1
             pop eax
             jmp gameloop_out
-        .ELSEIF ButtonExit_State == 1
+        .ELSEIF ButtonExit1_State == 1
             exit
         .ENDIF
     .ENDIF
@@ -437,15 +444,15 @@ DrawButtonExit PROC, State:Byte
     ret
 DrawButtonExit ENDP
 
-
 CheckState PROC
     .IF Button1_State == 1
         dec Button1_State
-        inc ButtonExit_State
+        inc ButtonExit1_State
     .ELSEIF Button1_State == 0
         inc Button1_State
-        dec ButtonExit_State
+        dec ButtonExit1_State
     .ENDIF
+    ret
 CheckState ENDP
 
 DrawHintWord1 PROC
@@ -481,6 +488,270 @@ DrawHintWord2 PROC
         ADDR cellsWritten	; output count
     ret
 DrawHintWord2 ENDP
+
+DrawEndTitle PROC
+    sub xyPosition0.y, 4 
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleTop,	; pointer to the top box line
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+            
+    inc xyPosition0.y	; next line
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleBody2,	; pointer to the box body
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+    inc xyPosition0.y	; next line
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleBody3,	; pointer to the box body
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+    inc xyPosition0.y	; next line
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleBody2,	; pointer to the box body
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+    inc xyPosition0.y	; next line
+    INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes0,
+            TitleWidth, 
+            xyPosition0,
+            ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR TitleBottom,	; pointer to the bottom of the box
+            TitleWidth,	; size of box line
+            xyPosition0,	; coordinates of first char
+            ADDR cellsWritten	; output count
+    ret
+DrawEndTitle ENDP
+
+DrawReplayButton PROC, State:Byte
+    sub xyPosition1.y, 2
+    .IF State==1
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes2,
+            ButtonWidth, 
+            xyPosition1,
+            ADDR cellsWritten
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonTop,	; pointer to the top box line
+            ButtonWidth,	; size of box line
+            xyPosition1,	; coordinates of first char
+            ADDR cellsWritten	; output count
+            
+        inc xyPosition1.y	; next line
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes2,
+            ButtonWidth, 
+            xyPosition1,
+            ADDR cellsWritten
+        
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonBody3,	; pointer to the box body
+            ButtonWidth,	; size of box line
+            xyPosition1,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+        inc xyPosition1.y	; next line
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes2,
+            ButtonWidth, 
+            xyPosition1,
+            ADDR cellsWritten
+        
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonBottom,	; pointer to the bottom of the box
+            ButtonWidth,	; size of box line
+            xyPosition1,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        ret
+    .ELSEIF State==0
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes1,
+            ButtonWidth, 
+            xyPosition1,
+            ADDR cellsWritten
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonTop,	; pointer to the top box line
+            ButtonWidth,	; size of box line
+            xyPosition1,	; coordinates of first char
+            ADDR cellsWritten	; output count
+            
+        inc xyPosition1.y	; next line
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes1,
+            ButtonWidth, 
+            xyPosition1,
+            ADDR cellsWritten
+        
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonBody3,	; pointer to the box body
+            ButtonWidth,	; size of box line
+            xyPosition1,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+        inc xyPosition1.y	; next line
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes1,
+            ButtonWidth, 
+            xyPosition1,
+            ADDR cellsWritten
+        
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonBottom,	; pointer to the bottom of the box
+            ButtonWidth,	; size of box line
+            xyPosition1,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        ret
+    .ENDIF
+    ret
+DrawReplayButton ENDP
+
+DrawExitButton PROC, State:Byte
+    sub xyPosition2.y, 2
+    .IF State==1
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes2,
+            ButtonWidth, 
+            xyPosition2,
+            ADDR cellsWritten
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonTop,	; pointer to the top box line
+            ButtonWidth,	; size of box line
+            xyPosition2,	; coordinates of first char
+            ADDR cellsWritten	; output count
+            
+        inc xyPosition2.y	; next line
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes2,
+            ButtonWidth, 
+            xyPosition2,
+            ADDR cellsWritten
+        
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonBody2,	; pointer to the box body
+            ButtonWidth,	; size of box line
+            xyPosition2,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+        inc xyPosition2.y	; next line
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes2,
+            ButtonWidth, 
+            xyPosition2,
+            ADDR cellsWritten
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonBottom,	; pointer to the bottom of the box
+            ButtonWidth,	; size of box line
+            xyPosition2,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        ret
+    .ELSEIF State==0
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes1,
+            ButtonWidth, 
+            xyPosition2,
+            ADDR cellsWritten
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonTop,	; pointer to the top box line
+            ButtonWidth,	; size of box line
+            xyPosition2,	; coordinates of first char
+            ADDR cellsWritten	; output count
+            
+        inc xyPosition2.y	; next line
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes1,
+            ButtonWidth, 
+            xyPosition2,
+            ADDR cellsWritten
+        
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonBody2,	; pointer to the box body
+            ButtonWidth,	; size of box line
+            xyPosition2,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        
+        inc xyPosition2.y	; next line
+        INVOKE WriteConsoleOutputAttribute,
+            outputHandle, 
+            ADDR attributes1,
+            ButtonWidth, 
+            xyPosition2,
+            ADDR cellsWritten
+        
+        INVOKE WriteConsoleOutputCharacter,
+            outputHandle,	; console output handle
+            ADDR ButtonBottom,	; pointer to the bottom of the box
+            ButtonWidth,	; size of box line
+            xyPosition2,	; coordinates of first char
+            ADDR cellsWritten	; output count
+        ret
+    .ENDIF
+    ret
+DrawExitButton ENDP
 
 Generate_block PROC
     mov xpos, 4
@@ -1344,127 +1615,494 @@ Rotate_I PROC,lr:byte
     .IF lr=='r'
         .IF direction==1
             _1rtest1:
-                
-
+                invoke Drawplayer,'.'
+                inc xpos
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rtest2
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
             _1rtest2:
-           
+                sub xpos,2
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rtest3
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret           
             _1rtest3:
-
-
-            _1rtest4:
-
-
+                add xpos,3
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rtest4
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
+            _1rtest4:       
+                sub xpos,3
+                inc ypos
+                cmp ypos,20
+                jl _1rtest5
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rtest5
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
             _1rtest5:
-
-
+                add xpos,3
+                sub ypos,3
+                cmp ypos,2
+                jl _1rdontmove
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _1rdontmove
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
+            _1rdontmove:
+                sub xpos,2
+                add ypos,2
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
         .IF direction==2
             _2rtest1:
-
-
+                inc ypos
+                invoke Drawplayer,'.'
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _2rtest2
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _2rtest2:
-
-
+                dec xpos
+                cmp xpos,3
+                jl _2rtest3
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _2rtest3
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _2rtest3:
-
-
+                add xpos,3
+                cmp xpos,9
+                jg _2rtest4
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _2rtest4
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _2rtest4:
-
-
+                sub ypos,2
+                sub xpos,3
+                cmp xpos,3
+                jl _2rtest5
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _2rtest5
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _2rtest5:
+                add xpos,3
+                add ypos,3
+                cmp xpos,9
+                jg _2rdontmove
+                invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _2rdontmove
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
+            _2rdontmove:
+                sub ypos,2
+                sub xpos,2
+                invoke Drawplayer,'X'
+                ret
         .ENDIF
         .IF direction==3
             _3rtest1:
-
-
+                invoke Drawplayer,'.'
+                dec xpos
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _3rtest2
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
             _3rtest2:
-
-
+                add xpos,2
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _3rtest3
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
             _3rtest3:
-
-
+                sub ypos,3
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _3rtest4
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
             _3rtest4:
-
-
+                add xpos,3
+                dec ypos
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _3rtest5
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
             _3rtest5:
+                add ypos,3
+                sub xpos,3
+                cmp ypos,20
+                jg _3rdontmove
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _3rdontmove
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
+            _3rdontmove:
+                add xpos,2
+                sub ypos,2
+                invoke Drawplayer,'X'
+                ret
         .ENDIF
-        .IF direction==3
+        .IF direction==4
             _4rtest1:
-
-
+                invoke Drawplayer,'.'
+                dec ypos
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rtest2
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
             _4rtest2:
-
-
+                inc xpos
+                cmp xpos,8
+                jg _4rtest3
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rtest3
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
             _4rtest3:
-
-
+                sub xpos,3
+                cmp xpos,3
+                jl _4rtest4
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rtest4
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
             _4rtest4:
-
-
+                add xpos,3
+                add ypos,2
+                cmp xpos,8
+                jg _4rtest5
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rtest5
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
             _4rtest5:
+                sub xpos,3
+                sub ypos,3
+                cmp xpos,2
+                jl _4rdontmove
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _4rdontmove
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
+            _4rdontmove:
+                add xpos,2
+                add ypos,2
+                invoke Drawplayer,'X'
+                ret
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction==1
             _1ltest1:
-
-
+                invoke Drawplayer,'.'
+                dec ypos
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _1ltest2
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
+                
             _1ltest2:
-           
+                dec xpos
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _1ltest3
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
             _1ltest3:
-
-
+                add xpos,3
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _1ltest4
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
             _1ltest4:
-
+                sub xpos,3
+                sub ypos,2
+                cmp ypos,2
+                jl _1ltest5
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _1ltest5
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
 
             _1ltest5:
-
-
+                add xpos,3
+                add ypos,3
+                cmp ypos,20
+                jg _1ldontmove
+                invoke Collision_block,4
+                .IF collisioned == 0
+                    jmp _1ldontmove
+                .ENDIF
+                mov direction,4
+                invoke Drawplayer,'X'
+                ret
+            _1ldontmove:
+                sub xpos,2
+                inc ypos
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
         .IF direction==2
             _2ltest1:
-
-
+                dec xpos
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ltest2
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
             _2ltest2:
-
+                add xpos,2
+                cmp xpos,8
+                jg _2ltest3
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ltest3
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
 
             _2ltest3:
-
-
+                sub xpos,3
+                cmp xpos,2
+                jg _2ltest4
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ltest4
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
             _2ltest4:
-
-
+                add xpos,3
+                dec ypos
+                cmp xpos,8
+                jg _2ltest5
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ltest5
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
             _2ltest5:
+                sub xpos,3
+                add ypos,3
+                cmp xpos,2
+                jl _2ldontmove
+                invoke Collision_block,1
+                .IF collisioned == 0
+                    jmp _2ldontmove
+                .ENDIF
+                mov direction,1
+                invoke Drawplayer,'X'
+                ret
+            _2ldontmove:
+                add xpos,2
+                sub ypos,2
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
         .IF direction==3
             _3ltest1:
-
-
+                invoke Drawplayer,'.'
+                dec ypos
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _3ltest2
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
             _3ltest2:
-
-
+                inc xpos
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _3ltest3
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
             _3ltest3:
-
-
+                sub xpos,3
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _3ltest4
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
             _3ltest4:
-
-
+                add xpos,3
+                add ypos,2
+                cmp ypos,20
+                jg _3ltest5
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _3ltest5
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
             _3ltest5:
+                sub xpos,3
+                sub ypos,3
+                cmp ypos,2
+                jl _3ldontmove
+                invoke Collision_block,2
+                .IF collisioned == 0
+                    jmp _3ldontmove
+                .ENDIF
+                mov direction,2
+                invoke Drawplayer,'X'
+                ret
+            _3ldontmove:
+                add xpos,2
+                add ypos,2
+                invoke Drawplayer,'x'
+                ret
         .ENDIF
-        .IF direction==3
+        .IF direction==4
             _4ltest1:
-
-
+                invoke Drawplayer,'.'
+                inc xpos
+                 invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _4ltest2
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _4ltest2:
-
-
+                sub xpos,2
+                cmp xpos,2
+                jl _4ltest3
+                dec xpos
+                 invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _4ltest3
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _4ltest3:
-
-
+                add xpos,3
+                cmp xpos,8
+                jg _4ltest4
+                 invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _4ltest4
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _4ltest4:
-
-
+                inc ypos
+                sub xpos,3
+                cmp xpos,2
+                jl _4ltest5
+                 invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _4ltest5
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
             _4ltest5:
+                sub ypos,3
+                add xpos,3
+                cmp xpos,8
+                jg _4ldontmove
+                 invoke Collision_block,3
+                .IF collisioned == 0
+                    jmp _4ldontmove
+                .ENDIF
+                mov direction,3
+                invoke Drawplayer,'X'
+                ret
+            _4ldontmove:
+                sub xpos,2
+                add ypos,2
+                invoke Drawplayer,'X'
+                ret
         .ENDIF
     .ENDIF
 Rotate_I ENDP
@@ -2951,498 +3589,119 @@ Rotate_L PROC,lr:byte
     .IF lr=='r'
         .IF direction==1
             _1rtest1:
-                invoke Drawplayer,'.'
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _1rtest2
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+                
             _1rtest2:
-                dec xpos
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _1rtest3
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+                
             _1rtest3:
-                dec ypos
-                cmp ypos,2
-                jl _1rtest4
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _1rtest4
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+               
             _1rtest4:
-                inc xpos
-                add ypos,3
-                cmp ypos,21
-                jg _1rtest5
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _1rtest5
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+                
             _1rtest5:
-                dec xpos
-                cmp ypos,21
-                jg _1rdontmove
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _1rdontmove
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+               
             _1rdontmove:
-                inc xpos
-                sub ypos,2
-                invoke Drawplayer,'X'
-                ret
+               
         .ENDIF
         .IF direction==2
             _2rtest1:
-                invoke Drawplayer,'.'
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _2rtest2
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+               
             _2rtest2:
-                inc xpos
-                cmp xpos,9
-                jg _2rtest3
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _2rtest3
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+               
             _2rtest3:
-                inc ypos
-                cmp xpos,9
-                jg _2rtest4
-                cmp ypos,21
-                jg _2rtest4
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _2rtest4
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+               
             _2rtest4:
-                dec xpos
-                sub ypos,3
-                cmp ypos,1
-                jl _2rtest5
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _2rtest5
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+              
             _2rtest5:
-                inc xpos
-                cmp xpos,9
-                jg _2rdontmove
-                cmp ypos,1
-                jl _2rdontmove
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _2rdontmove
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+
             _2rdontmove:
-                dec xpos
-                add ypos,2
-                invoke Drawplayer,'X'
-                ret
+
         .ENDIF
         .IF direction==3
             _3rtest1:
-                invoke Drawplayer,'.'
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _3rtest2
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+               
             _3rtest2:
-                inc xpos
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _3rtest3
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+
             _3rtest3:
-                dec ypos
-                cmp ypos,2
-                jl _3rtest4
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _3rtest4
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+            
             _3rtest4:
-                dec xpos
-                add ypos,3
-                cmp ypos,21
-                jg _3rtest5
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _3rtest5
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+              
             _3rtest5:
-                inc xpos
-                cmp ypos,21
-                jg _3rdontmove
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _3rdontmove
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+               
             _3rdontmove:
-                dec xpos
-                sub ypos,3
-                invoke Drawplayer,'X'
-                ret
+               
         .ENDIF
         .IF direction==4
             _4rtest1:
-                invoke Drawplayer,'.'
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _4rtest2
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+               
             _4rtest2:
-                dec xpos
-                cmp xpos,2
-                jl _4rtest3
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _4rtest3
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+               
             _4rtest3:
-                inc ypos
-                cmp xpos,2
-                jl _4rtest4
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _4rtest4
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+              
             _4rtest4:
-                inc xpos
-                sub ypos,3
-                cmp ypos,2
-                jl _4rtest5
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _4rtest5
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+               
             _4rtest5:
-                dec xpos
-                cmp ypos,2
-                jl _4rdontmove
-                cmp xpos,2
-                jl _4rdontmove
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _4rdontmove
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+               
             _4rdontmove:
-                inc xpos
-                add ypos,2
-                invoke Drawplayer,'X'
-                ret
+               
         .ENDIF
     .ENDIF
     .IF lr=='l'
         .IF direction==1
             _1ltest1:
-                invoke Drawplayer,'.'
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _1ltest2
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+                
             _1ltest2:
-                inc xpos
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _1ltest3
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+               
             _1ltest3:
-                dec ypos
-                cmp ypos,2
-                jl _1ltest4
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _1ltest4
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+               
             _1ltest4:
-                dec xpos
-                add ypos,3
-                cmp ypos,21
-                jg _1ltest5
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _1ltest5
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+                
             _1ltest5:
-                inc xpos
-                cmp ypos,21
-                jg _1ldontmove
-                invoke Collision_block,4
-                .IF collisioned==0
-                    jmp _1ldontmove
-                .ENDIF
-                mov direction,4
-                invoke Drawplayer,'X'
-                ret
+              
             _1ldontmove:
-                dec xpos
-                sub ypos,2
-                invoke Drawplayer,'X'
-                ret
+               
         .ENDIF
         .IF direction==2
             _2ltest1:
-                invoke Drawplayer,'.'
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _2ltest2
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+               
             _2ltest2:
-                inc xpos
-                cmp xpos,9
-                jg _2ltest3
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _2ltest3
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+               
             _2ltest3:
-                inc ypos
-                cmp xpos,9
-                jg _2ltest4
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _2ltest4
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+               
             _2ltest4:
-                dec xpos
-                sub ypos,3
-                cmp ypos,2
-                jl _2ltest5
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _2ltest5
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+               
             _2ltest5:
-                inc xpos
-                cmp ypos,2
-                jl _2ldontmove
-                cmp xpos,9
-                jg _2ldontmove
-                invoke Collision_block,1
-                .IF collisioned==0
-                    jmp _2ldontmove
-                .ENDIF
-                mov direction,1
-                invoke Drawplayer,'X'
-                ret
+              
             _2ldontmove:
-                dec xpos
-                add ypos,2
-                invoke Drawplayer,'X'
-                ret
+
         .ENDIF
         .IF direction==3
             _3ltest1:
-                invoke Drawplayer,'.'
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _3ltest2
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+
 
             _3ltest2:
-                dec xpos
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _3ltest3
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+ 
             _3ltest3:
-                dec ypos
-                cmp ypos,2
-                jl _3ltest4
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _3ltest4
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+
             _3ltest4:
-                inc xpos
-                add ypos,3
-                cmp ypos,21
-                jg _3ltest5
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _3ltest5
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+
             _3ltest5:
-                dec xpos
-                cmp ypos,21
-                jg _3ldontmove
-                invoke Collision_block,2
-                .IF collisioned==0
-                    jmp _3ldontmove
-                .ENDIF
-                mov direction,2
-                invoke Drawplayer,'X'
-                ret
+
             _3ldontmove:
-                inc xpos
-                sub ypos,2
-                invoke Drawplayer,'X'
-                ret
+
         .ENDIF
         .IF direction==4
             _4ltest1:
-                invoke Drawplayer,'.'
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _4ltest2
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+             
             _4ltest2:
-                dec xpos
-                cmp xpos,2
-                jl _4ltest3
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _4ltest3
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+          
             _4ltest3:
-                inc ypos
-                cmp xpos,2
-                jl _4ltest4
-                cmp ypos,21
-                jg _4ltest4
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _4ltest4
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+              
+                
             _4ltest4:
-                inc xpos
-                sub ypos,3
-                cmp ypos,1
-                jl _4ltest5
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _4ltest5
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+               
             _4ltest5:
-                dec xpos
-                cmp ypos,1
-                jl _4ldontmove
-                cmp xpos,2
-                jl _4ldontmove
-                invoke Collision_block,3
-                .IF collisioned==0
-                    jmp _4ldontmove
-                .ENDIF
-                mov direction,3
-                invoke Drawplayer,'X'
-                ret
+               
             _4ldontmove:
-                inc xpos
-                add ypos,2
-                invoke Drawplayer,'X'
-                ret
+                
         .ENDIF
     .ENDIF
     ret
