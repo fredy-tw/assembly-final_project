@@ -1289,6 +1289,7 @@ Draw PROC
         mov dl, al
         mov dh, ah
         call Crlf
+
         inc dh
         loop L
     ;call ReadChar
@@ -1717,7 +1718,7 @@ Collision_block PROC,dir:byte ; 0 collide 1 safe to place
             cmp BYTE PTR [edx],'.'
             jne collison
             add edx,11
-            mov BYTE PTR [edx],'.'
+            cmp BYTE PTR [edx],'.'
             jne collison
             mov collisioned,1
             ret
@@ -3898,7 +3899,7 @@ Rotate_L PROC,lr:byte
                     jmp _3rtest2
                 .ENDIF
                 mov direction,4
-                invoke Drawplayer,'h'
+                invoke Drawplayer,'X'
                 ret
             _3rtest2:
                 inc xpos
@@ -4168,7 +4169,7 @@ Rotate_L PROC,lr:byte
                 ret
             _3ltest4:
                 inc xpos
-                add ypos,3
+                add ypos,2
                 cmp ypos,21
                 jg _3ltest5
                 invoke Collision_block,2
@@ -4204,7 +4205,7 @@ Rotate_L PROC,lr:byte
                     jmp _4ltest2
                 .ENDIF
                 mov direction,3
-                invoke Drawplayer,'F'
+                invoke Drawplayer,'X'
                 ret
             _4ltest2:
                 dec xpos
