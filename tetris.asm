@@ -32,6 +32,7 @@ DrawHintWord6 PROTO ;j rotate left
 DrawHintWord7 PROTO ;k rotate right
 DrawHintWord8 PROTO ;space move bottom
 DrawHintWord9 PROTO ;press a to continue
+DrawHintWord10 PROTO ;h to hold block
 DrawEndTitle PROTO
 DrawReplayButton PROTO,State:byte
 DrawExitButton PROTO,State:byte
@@ -62,6 +63,7 @@ HintText6   BYTE 'j', ' ', 'r', 'o', 't', 'a', 't', 'e', ' ', 'l', 'e', 'f', 't'
 HintText7   BYTE 'k', ' ', 'r', 'o', 't', 'a', 't', 'e', ' ', 'r', 'i', 'g', 'h', 't' ;HintText7 14
 HintText8   BYTE 's', 'p', 'a', 'c', 'e', ' ', 'm', 'o', 'v', 'e', ' ', 'b', 'o', 't', 't', 'o', 'm' ;HintText8 17
 HintText9   BYTE 'p', 'r', 'e', 's', 's', ' ', 'a', ' ', 't', 'o', ' ', 'c', 'o', 'n', 't', 'i', 'n', 'u', 'e' ;HintText9 19  
+HintText10   BYTE 'h', ' ', 't', 'o', ' ', 'h', 'o', 'l', 'd', ' ', 'b', 'l', 'o', 'c', 'k' ;HintText7 15
 ButtonBottom BYTE 0C0h, (Buttonwidth - 2) DUP(0C4h), 0D9h
 outputHandle DWORD 0
 bytesWritten DWORD 0
@@ -77,6 +79,7 @@ attributes8  WORD 13 DUP(0Fh)
 attributes9  WORD 14 DUP(0Fh)
 attributes10 WORD 17 DUP(0Fh)
 attributes11 WORD 19 DUP(0Fh);totorielEnd
+attributes12 WORD 15 DUP(0Fh)
 xyPosition0  COORD <3,4>;title
 xyPosition1  COORD <10,12>;titleStart
 xyPosition2  COORD <10,17>;titleExit
@@ -88,7 +91,8 @@ xyPosition7  COORD <9,12>
 xyPosition8  COORD <9,13>
 xyPosition9  COORD <9,14>
 xyPosition10 COORD <9,15>
-xyPosition11 COORD <4,18>;totorielEnd
+xyPosition11 COORD <4,19>;totorielEnd
+xyPosition12 COORD <9,16>
 cellsWritten DWORD ?
 xpos BYTE 4
 ypos BYTE 1
@@ -157,6 +161,7 @@ TotorielDraw:
     invoke DrawHintWord7
     invoke DrawHintWord8
     invoke DrawHintWord9
+    invoke DrawHintWord10
 TotorielCheck:
     mov eax, 500
     call Delay
@@ -709,6 +714,24 @@ DrawHintWord9 PROC
         ADDR cellsWritten	; output count
     ret
 DrawHintWord9 ENDP
+
+DrawHintWord10 PROC
+    INVOKE WriteConsoleOutputAttribute,
+        outputHandle, 
+        ADDR attributes12,
+        15, 
+        xyPosition12,
+        ADDR cellsWritten
+        
+    INVOKE WriteConsoleOutputCharacter,
+        outputHandle,	; console output handle
+        ADDR HintText10,	; pointer to the bottom of the box
+        15,	; size of box line
+        xyPosition12,	; coordinates of first char
+        ADDR cellsWritten	; output count
+    ret
+DrawHintWord10 ENDP
+
 DrawReplayButton PROC, State:Byte
     sub xyPosition1.y, 2
     .IF State==1
