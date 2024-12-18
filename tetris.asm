@@ -2,6 +2,7 @@ INCLUDE Irvine32.inc
 main          EQU start@0
 Drawplayer PROTO,paint:byte
 Move_block PROTO,move_type:byte
+Find_movetype PROTO
 Rotate_block PROTO,lr:byte
 Rotate_I PROTO,lr:byte
 Rotate_S PROTO,lr:byte
@@ -13,6 +14,9 @@ Collision_block PROTO,dir:byte
 Drop_block PROTO,dir:byte
 Score_counting PROTO
 Draw PROTO
+DrawScoreHold PROTO
+DrawHoldblock PROTO
+Holdfunction PROTO
 Generate_block PROTO
 DrawTitle PROTO
 DrawButton1 PROTO,State:byte
@@ -96,7 +100,14 @@ player Byte 22 dup('..........',0),2 dup('xxxxxxxxxx',0);?h?X??????O ???@?}?l???
 collisioned Byte 1  ;to check if it is collision, 1 means not collision, 0 means collision
 score DWORD 0
 row_num Byte 0
-score_msg db 'Score: ', 0
+score_msg db 'Score:', 0
+hold_msg db 'Hold:', 0
+holdboxTop BYTE 0DAh, 6 dup(0C4h), 0BFh, 0
+holdboxBody BYTE 0B3h, 6 dup(' '), 0B3h, 0
+holdboxBottom BYTE 0C0h, 6 dup(0C4h), 0D9h, 0
+holdbox BYTE 6 dup('      ', 0), 0
+hold_type byte '0'
+holded byte 1 ;to check if this round had holded, 1 means had holded, 0 means not holded yet
 hConsoleInput HANDLE 0
 temp BYTE 0
 ButtonExit11_State Byte 1
@@ -159,8 +170,10 @@ TotorielCheck:
 gameloop_out:
     call Clrscr
     mov collisioned, 1
+    mov holded, 0
     invoke Generate_block
     ; mov block_type,'L'
+L_hold:
     invoke Collision_block, direction
     cmp collisioned, 0
     je gameover
@@ -169,23 +182,23 @@ gameloop_out:
 gameloop_in:
     mov ecx, 5
 gameloop:
+    mov temp, 0
     mov eax, 200
     call Delay
     push eax
     call ReadKey
     jz no_input
-    .IF al == 'a'
-        mov temp, 1
-    .ELSEIF al == 's'
-        mov temp, 2
-    .ELSEIF al == 'd'
-        mov temp, 3
-    .ELSEIF al == 'j'
-        mov temp, 4
-    .ELSEIF al == 'l'
-        mov temp, 5
-    .ELSEIF al == ' '
-        mov temp, 6
+    invoke Find_movetype
+    .IF al == 'h'
+        .IF holded == 0
+            .IF hold_type == '0'
+                invoke Holdfunction
+                jmp gameloop_out
+            .ELSE
+                invoke Holdfunction
+                jmp L_hold
+            .ENDIF
+        .ENDIF
     .ENDIF
     invoke Move_block, temp
 no_input:
@@ -1289,23 +1302,177 @@ Draw PROC
         mov dl, al
         mov dh, ah
         call Crlf
-
         inc dh
         loop L
     ;call ReadChar
     pop ecx
-    ;output the score
+    invoke DrawScoreHold
+    ret
+Draw ENDP
+DrawScoreHold PROC
+    invoke DrawHoldblock
     push dx
     push eax
+    mov dl, 16
+    mov dh, 3
+    call Gotoxy
+    ;output the score
     lea dx, score_msg
     call writestring
     mov eax, score
     call writedec
-    call Crlf
+    ;output the hold box
+    mov dl, 16
+    mov dh, 4
+    call Gotoxy
+    lea dx, hold_msg
+    call writestring
+    mov dl, 16
+    mov dh, 5
+    call Gotoxy
+    mov edx, OFFSET holdboxTop
+    call WriteString
+    mov dl, 16
+    mov dh, 12
+    call Gotoxy
+    mov edx, OFFSET holdboxBottom
+    call WriteString
+    push ecx
+    mov ecx, 6
+    mov al, 6
+L:
+    mov dl, 16
+    mov dh, al
+    call Gotoxy
+    mov edx, OFFSET holdboxBody
+    call WriteString
+    inc al
+    loop L
+    mov ecx, 6
+    mov ebx, 0
+    mov al, 6
+    Lh:
+        mov dl, 17
+        mov dh, al
+        call Gotoxy
+        mov edx, OFFSET holdbox
+        add edx, ebx
+        add ebx, 7
+        call WriteString
+        call Crlf
+        inc al
+        loop Lh
+    pop ecx
     pop eax
     pop dx
     ret
-Draw ENDP
+DrawScoreHold ENDP
+DrawHoldblock PROC
+    ;clear holdbox
+    mov edx, OFFSET holdbox
+    push ecx
+    mov ecx, 6
+L:
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], 0
+    inc edx
+    loop L
+    pop ecx
+    ;draw hold block I O J L S Z T
+    mov edx, OFFSET holdbox
+    .IF hold_type == 'I'
+        add edx, 9
+        mov BYTE PTR [edx], 'X'
+        add edx, 7
+        mov BYTE PTR [edx], 'X'
+        add edx, 7
+        mov BYTE PTR [edx], 'X'
+        add edx, 7
+        mov BYTE PTR [edx], 'X'
+    .ELSEIF hold_type == 'O'
+        add edx, 16
+        mov BYTE PTR [edx], 'X'
+        inc edx
+        mov BYTE PTR [edx], 'X'
+        add edx, 7
+        mov BYTE PTR [edx], 'X'
+        dec edx
+        mov BYTE PTR [edx], 'X'
+    .ELSEIF hold_type == 'J'
+        add edx, 10
+        mov BYTE PTR [edx], 'X'
+        add edx, 7
+        mov BYTE PTR [edx], 'X'
+        add edx, 7
+        mov BYTE PTR [edx], 'X'
+        dec edx
+        mov BYTE PTR [edx], 'X'
+    .ELSEIF hold_type == 'L'
+        add edx, 9
+        mov BYTE PTR [edx], 'X'
+        add edx, 7
+        mov BYTE PTR [edx], 'X'
+        add edx, 7
+        mov BYTE PTR [edx], 'X'
+        inc edx
+        mov BYTE PTR [edx], 'X'
+    .ELSEIF hold_type == 'S'
+        add edx, 17
+        mov BYTE PTR [edx], 'X'
+        inc edx
+        mov BYTE PTR [edx], 'X'
+        add edx, 6
+        mov BYTE PTR [edx], 'X'
+        dec edx
+        mov BYTE PTR [edx], 'X'
+    .ELSEIF hold_type == 'Z'
+        add edx, 16
+        mov BYTE PTR [edx], 'X'
+        dec edx
+        mov BYTE PTR [edx], 'X'
+        add edx, 8
+        mov BYTE PTR [edx], 'X'
+        inc edx
+        mov BYTE PTR [edx], 'X'
+    .ELSEIF hold_type == 'T'
+        add edx, 15
+        mov BYTE PTR [edx], 'X'
+        inc edx
+        mov BYTE PTR [edx], 'X'
+        inc edx
+        mov BYTE PTR [edx], 'X'
+        add edx, 6
+        mov BYTE PTR [edx], 'X'
+    .ENDIF
+    ret
+DrawHoldblock ENDP
+Holdfunction PROC
+    mov holded, 1
+    push eax
+    invoke Drawplayer, '.'
+    .IF hold_type == '0'
+        mov al, block_type
+        mov hold_type, al
+    .ELSE
+        mov al, hold_type
+        mov ah, block_type
+        mov hold_type, ah
+        mov block_type, al
+    .ENDIF
+    pop eax
+    ret
+Holdfunction ENDP
 Collision_block PROC,dir:byte ; 0 collide 1 safe to place
     mov edx,OFFSET player
     mov eax,0
@@ -1741,6 +1908,22 @@ L1:
     invoke Draw
     ret
 Drop_block ENDP
+Find_movetype PROC
+    .IF al == 'a'
+        mov temp, 1
+    .ELSEIF al == 's'
+        mov temp, 2
+    .ELSEIF al == 'd'
+        mov temp, 3
+    .ELSEIF al == 'j'
+        mov temp, 4
+    .ELSEIF al == 'l'
+        mov temp, 5
+    .ELSEIF al == ' '
+        mov temp, 6
+    .ENDIF
+    ret
+Find_movetype ENDP
 Move_block PROC, move_type: BYTE
     invoke Drawplayer, '.'
     .IF move_type == 1
