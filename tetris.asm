@@ -191,10 +191,13 @@ gameloop:
     invoke Find_movetype
     .IF al == 'h'
         .IF holded == 0
+            invoke Drawplayer, '.'
             .IF hold_type == '0'
                 invoke Holdfunction
                 jmp gameloop_out
             .ELSE
+                mov xpos, 4
+                mov ypos, 1
                 invoke Holdfunction
                 jmp L_hold
             .ENDIF
@@ -970,7 +973,6 @@ DrawEndTitle PROC
     ret
 DrawEndTitle ENDP
 
-
 Generate_block PROC
     mov xpos, 4
     mov ypos, 1
@@ -1460,7 +1462,6 @@ DrawHoldblock ENDP
 Holdfunction PROC
     mov holded, 1
     push eax
-    invoke Drawplayer, '.'
     .IF hold_type == '0'
         mov al, block_type
         mov hold_type, al
