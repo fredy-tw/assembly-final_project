@@ -1,6 +1,8 @@
 INCLUDE Irvine32.inc
 main          EQU start@0
 Drawplayer PROTO,paint:byte
+ShowGhostBlock PROTO
+RemoveGhostBlock PROTO
 Move_block PROTO,move_type:byte
 Find_movetype PROTO
 Rotate_block PROTO,lr:byte
@@ -96,11 +98,14 @@ xyPosition12 COORD <9,16>
 cellsWritten DWORD ?
 xpos BYTE 4
 ypos BYTE 1
+ghost_xpos BYTE ?
+ghost_ypos BYTE ?
+buffer BYTE ?
 inputChar BYTE ?
 isJumping BYTE ?
 block_type byte 'O';indicate what kind of block player is controling I O J L S Z T
 direction byte 1
-player Byte 22 dup('..........',0),2 dup('xxxxxxxxxx',0);?h?X??????O ???@?}?l???????m
+player Byte 22 dup('..........',0),2 dup('XXXXXXXXXX',0);?h?X??????O ???@?}?l???????m
 collisioned Byte 1  ;to check if it is collision, 1 means not collision, 0 means collision
 score DWORD 0
 row_num Byte 0
@@ -182,6 +187,7 @@ L_hold:
     invoke Collision_block, direction
     cmp collisioned, 0
     je gameover
+    invoke ShowGhostBlock
     invoke Drawplayer, 'X'
     invoke Draw
 gameloop_in:
@@ -196,6 +202,7 @@ gameloop:
     invoke Find_movetype
     .IF al == 'h'
         .IF holded == 0
+            invoke RemoveGhostBlock
             invoke Drawplayer, '.'
             .IF hold_type == '0'
                 invoke Holdfunction
@@ -224,6 +231,46 @@ gameover:
     call Delay
     exit
 main ENDP
+
+ShowGhostBlock PROC
+    push eax
+    push ebx
+    mov al, ypos
+    mov buffer, al
+drop_loop:
+    inc ypos
+    invoke Collision_block, direction
+    cmp collisioned, 1
+    je drop_loop
+    dec ypos
+    invoke Drawplayer, 'O'
+    mov bh, xpos
+    mov bl, ypos
+    mov ghost_xpos, bh
+    mov ghost_ypos, bl
+    mov al, buffer
+    mov ypos, al
+    pop ebx
+    pop eax
+    ret
+ShowGhostBlock ENDP
+
+RemoveGhostBlock PROC
+    push eax
+    push ebx
+    mov ah, xpos
+    mov al, ypos
+    mov bh, ghost_xpos
+    mov bl, ghost_ypos
+    mov xpos, bh
+    mov ypos, bl
+    invoke Drawplayer, '.'
+    mov xpos, ah
+    mov ypos, al
+    pop ebx
+    pop eax
+    ret
+RemoveGhostBlock ENDP
 
 RemoveBlock PROC
     mov row_num, 0
@@ -263,6 +310,7 @@ end_remove:
     invoke Score_counting
     ret
 RemoveBlock ENDP
+
 Score_counting PROC
     .IF row_num == 10
         add score, 40
@@ -1040,6 +1088,8 @@ gen_O:
     ret
 Generate_block ENDP
 Drawplayer PROC,paint:byte;???@???????i?H?M?w?e??????
+    push eax
+    push ebx
     mov edx,OFFSET player
     mov eax,0
     mov al,ypos
@@ -1308,8 +1358,11 @@ Drawplayer PROC,paint:byte;???@???????i?H?M?w?e??????
             mov BYTE PTR [edx],al
         .ENDIF
     .ENDIF
+    pop ebx
+    pop eax
     ret
 Drawplayer ENDP
+
 Draw PROC
     push ecx
     mov ecx,22
@@ -1508,146 +1561,218 @@ Collision_block PROC,dir:byte ; 0 collide 1 safe to place
     .IF block_type=='I' ;not good
         .IF dir==1
             dec edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==2
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
             sub edx,2
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
             sub edx,22
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
     .ENDIF
     .IF block_type=='O' ; good
-        cmp BYTE PTR [edx],'.'
-        jne collison
+        cmp BYTE PTR [edx],'X'
+        je collison
+        cmp BYTE PTR [edx], 0
+        je collison
         inc edx
-        cmp BYTE PTR [edx],'.'
-        jne collison
+        cmp BYTE PTR [edx],'X'
+        je collison
+        cmp BYTE PTR [edx], 0
+        je collison
         sub edx,11
-        cmp BYTE PTR [edx],'.'
-        jne collison
+        cmp BYTE PTR [edx],'X'
+        je collison
+        cmp BYTE PTR [edx], 0
+        je collison
         dec edx
-        cmp BYTE PTR [edx],'.'
-        jne collison
+        cmp BYTE PTR [edx],'X'
+        je collison
+        cmp BYTE PTR [edx], 0
+        je collison
         mov collisioned,1
         ret
     .ENDIF
     .IF block_type=='T' ;good
         .IF dir==1 ;face up
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  ;face right
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==3 ;face down
             dec edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==4 ;face left
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
@@ -1655,64 +1780,96 @@ Collision_block PROC,dir:byte ; 0 collide 1 safe to place
     .IF block_type=='S' ;good
         .IF dir==1
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,9
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,9
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
             sub edx,12
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
@@ -1720,65 +1877,97 @@ Collision_block PROC,dir:byte ; 0 collide 1 safe to place
     .IF block_type=='Z' ;good
         .IF dir==1
             sub edx,12
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  
             sub edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
             dec edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
@@ -1786,65 +1975,97 @@ Collision_block PROC,dir:byte ; 0 collide 1 safe to place
     .IF block_type=='J' ;good
         .IF dir==1
             sub edx,12
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
             dec edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
@@ -1852,65 +2073,97 @@ Collision_block PROC,dir:byte ; 0 collide 1 safe to place
     .IF block_type=='L' ;good
         .IF dir==1
             sub edx,10
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,9
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==2  
             sub edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==3
             dec edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,9
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
         .IF dir==4
             sub edx,12
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             inc edx
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             add edx,11
-            cmp BYTE PTR [edx],'.'
-            jne collison
+            cmp BYTE PTR [edx],'X'
+            je collison
+            cmp BYTE PTR [edx], 0
+            je collison
             mov collisioned,1
             ret
         .ENDIF
@@ -1948,7 +2201,9 @@ Find_movetype PROC
     .ENDIF
     ret
 Find_movetype ENDP
+
 Move_block PROC, move_type: BYTE
+    invoke RemoveGhostBlock
     invoke Drawplayer, '.'
     .IF move_type == 1
         dec xpos
@@ -1973,9 +2228,11 @@ Move_block PROC, move_type: BYTE
     .ENDIF
     .IF move_type == 4
         invoke Rotate_block, 'l'
+        invoke ShowGhostBlock
     .ENDIF
     .IF move_type == 5
         invoke Rotate_block, 'r'
+        invoke ShowGhostBlock
     .ENDIF
     .IF move_type == 6
     L:
@@ -1983,10 +2240,12 @@ Move_block PROC, move_type: BYTE
         cmp collisioned, 1
         je L
     .ENDIF
+    invoke ShowGhostBlock
     invoke Drawplayer, 'X'
     invoke Draw
     ret
 Move_block ENDP
+
 Rotate_block PROC,lr:byte
     .IF block_type=='I'
         invoke Rotate_I,lr
