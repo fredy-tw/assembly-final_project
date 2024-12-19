@@ -131,8 +131,8 @@ start:
     INVOKE GetStdHandle, STD_INPUT_HANDLE
     mov hConsoleInput, eax
     INVOKE GetStdHandle, STD_OUTPUT_HANDLE
-    mov outputHandle, eax
-    mov eax,red+(black*16)
+    ; mov outputHandle, eax
+    ; mov eax,red+(black*16)
     call SetTextColor
     invoke DrawTitle
     invoke DrawHintWord1
