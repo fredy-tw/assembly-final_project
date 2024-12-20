@@ -19,6 +19,8 @@ Score_counting PROTO
 Draw PROTO
 DrawScoreHold PROTO
 DrawHoldblock PROTO
+DrawNextblock PROTO
+DrawNext PROTO
 Holdfunction PROTO
 Generate_block PROTO
 DrawTitle PROTO
@@ -105,6 +107,7 @@ buffer BYTE ?
 inputChar BYTE ?
 isJumping BYTE ?
 block_type byte 'O';indicate what kind of block player is controling I O J L S Z T
+next_type byte 'O'
 direction byte 1
 player Byte 22 dup('..........',0),2 dup(10 dup(0feh),0);?h?X??????O ???@?}?l???????m
 collided Byte 1  ;to check if it is collision, 1 means not collision, 0 means collision
@@ -112,13 +115,15 @@ score DWORD 0
 row_num Byte 0
 score_msg db 'Score:', 0
 hold_msg db 'Hold:', 0
+next_msg db 'Next: ', 0
 level_msg db 'Level: ', 0
-holdboxTop BYTE 0DAh, 6 dup(0C4h), 0BFh, 0
-holdboxBody BYTE 0B3h, 6 dup(' '), 0B3h, 0
-holdboxBottom BYTE 0C0h, 6 dup(0C4h), 0D9h, 0
+boxTop BYTE 0DAh, 6 dup(0C4h), 0BFh, 0
+boxBody BYTE 0B3h, 6 dup(' '), 0B3h, 0
+boxBottom BYTE 0C0h, 6 dup(0C4h), 0D9h, 0
 holdbox BYTE 6 dup('      ', 0), 0
 hold_type byte '0'
 holded byte 1 ;to check if this round had holded, 1 means had holded, 0 means not holded yet
+nextbox BYTE 6 dup('      ', 0), 0
 level byte 1
 hConsoleInput HANDLE 0
 temp BYTE 0
@@ -179,6 +184,7 @@ TotorielCheck:
     call ReadKey
     .IF al == 'a'
         pop eax
+        invoke Generate_block
         jmp gameloop_out
     .ENDIF
     loop TotorielCheck
@@ -186,6 +192,10 @@ gameloop_out:
     call Clrscr
     mov collided, 1
     mov holded, 0
+    push eax
+    mov al, next_type
+    mov block_type, al
+    pop eax
     invoke Generate_block
     .IF score >= 0
         mov level, 1
@@ -1114,25 +1124,25 @@ Generate_block PROC
     cmp edx, 6
     je gen_O
 gen_I:
-    mov block_type, 'I'
+    mov next_type, 'I'
     ret
 gen_S:
-    mov block_type, 'S'
+    mov next_type, 'S'
     ret
 gen_Z:
-    mov block_type, 'Z'
+    mov next_type, 'Z'
     ret
 gen_T:
-    mov block_type, 'T'
+    mov next_type, 'T'
     ret
 gen_J:
-    mov block_type, 'J'
+    mov next_type, 'J'
     ret
 gen_L:
-    mov block_type, 'L'
+    mov next_type, 'L'
     ret
 gen_O:
-    mov block_type, 'O'
+    mov next_type, 'O'
     ret
 Generate_block ENDP
 Drawplayer PROC,paint:byte;???@???????i?H?M?w?e??????
@@ -1433,6 +1443,7 @@ Draw PROC
     ;call ReadChar
     pop ecx
     invoke DrawScoreHold
+    invoke DrawNextblock
     ret
 Draw ENDP
 DrawScoreHold PROC
@@ -1464,12 +1475,12 @@ DrawScoreHold PROC
     mov dl, 19
     mov dh, 5
     call Gotoxy
-    mov edx, OFFSET holdboxTop
+    mov edx, OFFSET boxTop
     call WriteString
     mov dl, 19
     mov dh, 12
     call Gotoxy
-    mov edx, OFFSET holdboxBottom
+    mov edx, OFFSET boxBottom
     call WriteString
     push ecx
     mov ecx, 6
@@ -1478,7 +1489,7 @@ L:
     mov dl, 19
     mov dh, al
     call Gotoxy
-    mov edx, OFFSET holdboxBody
+    mov edx, OFFSET boxBody
     call WriteString
     inc al
     loop L
@@ -1606,6 +1617,146 @@ Holdfunction PROC
     pop eax
     ret
 Holdfunction ENDP
+DrawNextblock PROC
+    invoke DrawNext
+    push dx
+    push eax
+    ;output the next box
+    mov dl, 19
+    mov dh, 14
+    call Gotoxy
+    lea dx, next_msg
+    call writestring
+    mov dl, 19
+    mov dh, 15
+    call Gotoxy
+    mov edx, OFFSET boxTop
+    call WriteString
+    mov dl, 19
+    mov dh, 22
+    call Gotoxy
+    mov edx, OFFSET boxBottom
+    call WriteString
+    push ecx
+    mov ecx, 6
+    mov al, 16
+L:
+    mov dl, 19
+    mov dh, al
+    call Gotoxy
+    mov edx, OFFSET boxBody
+    call WriteString
+    inc al
+    loop L
+    mov ecx, 6
+    mov ebx, 0
+    mov al, 16
+    Lh:
+        mov dl, 20
+        mov dh, al
+        call Gotoxy
+        mov edx, OFFSET nextbox
+        add edx, ebx
+        add ebx, 7
+        call WriteString
+        call Crlf
+        inc al
+        loop Lh
+    pop ecx
+    pop eax
+    pop dx
+    ret
+DrawNextblock ENDP
+DrawNext PROC
+    ;clear nextbox
+    mov edx, OFFSET nextbox
+    push ecx
+    mov ecx, 6
+L:
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], ' '
+    inc edx
+    mov BYTE PTR [edx], 0
+    inc edx
+    loop L
+    pop ecx
+    ;draw hold block I O J L S Z T
+    mov edx, OFFSET nextbox
+    .IF next_type == 'I'
+        add edx, 9
+        mov BYTE PTR [edx], 0feh
+        add edx, 7
+        mov BYTE PTR [edx], 0feh
+        add edx, 7
+        mov BYTE PTR [edx], 0feh
+        add edx, 7
+        mov BYTE PTR [edx], 0feh
+    .ELSEIF next_type == 'O'
+        add edx, 16
+        mov BYTE PTR [edx], 0feh
+        inc edx
+        mov BYTE PTR [edx], 0feh
+        add edx, 7
+        mov BYTE PTR [edx], 0feh
+        dec edx
+        mov BYTE PTR [edx], 0feh
+    .ELSEIF next_type == 'J'
+        add edx, 10
+        mov BYTE PTR [edx], 0feh
+        add edx, 7
+        mov BYTE PTR [edx], 0feh
+        add edx, 7
+        mov BYTE PTR [edx], 0feh
+        dec edx
+        mov BYTE PTR [edx], 0feh
+    .ELSEIF next_type == 'L'
+        add edx, 9
+        mov BYTE PTR [edx], 0feh
+        add edx, 7
+        mov BYTE PTR [edx], 0feh
+        add edx, 7
+        mov BYTE PTR [edx], 0feh
+        inc edx
+        mov BYTE PTR [edx], 0feh
+    .ELSEIF next_type == 'S'
+        add edx, 17
+        mov BYTE PTR [edx], 0feh
+        inc edx
+        mov BYTE PTR [edx], 0feh
+        add edx, 6
+        mov BYTE PTR [edx], 0feh
+        dec edx
+        mov BYTE PTR [edx], 0feh
+    .ELSEIF next_type == 'Z'
+        add edx, 16
+        mov BYTE PTR [edx], 0feh
+        dec edx
+        mov BYTE PTR [edx], 0feh
+        add edx, 8
+        mov BYTE PTR [edx], 0feh
+        inc edx
+        mov BYTE PTR [edx], 0feh
+    .ELSEIF next_type == 'T'
+        add edx, 15
+        mov BYTE PTR [edx], 0feh
+        inc edx
+        mov BYTE PTR [edx], 0feh
+        inc edx
+        mov BYTE PTR [edx], 0feh
+        add edx, 6
+        mov BYTE PTR [edx], 0feh
+    .ENDIF
+    ret
+DrawNext ENDP
 Resetplayer PROC
     mov edx, OFFSET player
     push ecx
