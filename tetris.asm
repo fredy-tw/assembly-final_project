@@ -187,7 +187,7 @@ TotorielCheck:
         invoke Generate_block
         jmp gameloop_out
     .ENDIF
-    loop TotorielCheck
+    jmp TotorielCheck
 gameloop_out:
     call Clrscr
     mov collided, 1
