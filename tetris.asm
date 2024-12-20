@@ -1,6 +1,7 @@
 INCLUDE Irvine32.inc
 main          EQU start@0
 Drawplayer PROTO,paint:byte
+Resetplayer PROTO
 ShowGhostBlock PROTO
 RemoveGhostBlock PROTO
 Move_block PROTO,move_type:byte
@@ -126,7 +127,7 @@ ButtonExit11_State Byte 1
     SetConsoleOutputCP PROTO STDCALL :DWORD
 main PROC
 start:
-    mov level, 1
+    invoke Resetplayer
     INVOKE SetConsoleOutputCP, 437
     INVOKE GetStdHandle, STD_INPUT_HANDLE
     mov hConsoleInput, eax
@@ -186,15 +187,15 @@ gameloop_out:
     mov collided, 1
     mov holded, 0
     invoke Generate_block
-    .IF score >= 1000
+    .IF score >= 0
         mov level, 1
-        .IF score >= 2000
+        .IF score >= 1000
             mov level, 2
-            .IF score >= 3000
+            .IF score >= 2000
                 mov level, 3
-                .IF score >= 4000
+                .IF score >= 3000
                     mov level, 4
-                    .IF score >= 5000
+                    .IF score >= 4000
                         mov level, 5
                     .ENDIF
                 .ENDIF
@@ -1605,6 +1606,26 @@ Holdfunction PROC
     pop eax
     ret
 Holdfunction ENDP
+Resetplayer PROC
+    mov edx, OFFSET player
+    push ecx
+    mov ecx, 22
+L1:
+    push ecx
+    mov ecx, 10
+L2:
+    mov BYTE PTR [edx], '.'
+    inc edx
+    loop L2
+    pop ecx
+    inc edx
+    loop L1
+    pop ecx
+    mov level, 1
+    mov hold_type, '0'
+    mov score, 0
+    ret
+Resetplayer ENDP
 Collision_block PROC,dir:byte ; 0 collide 1 safe to place
     mov edx,OFFSET player
     mov eax,0
