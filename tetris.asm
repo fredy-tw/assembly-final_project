@@ -252,9 +252,30 @@ no_input:
     jmp gameloop_out
 gameover:
     invoke DrawEndTitle
-    mov eax, 2000
+Buttons2:
+    invoke DrawReplayButton, ButtonReplay_State
+    invoke DrawExitButton, ButtonExit2_State
+    mov eax, 200
     call Delay
-    jmp start
+    push eax
+    call ReadKey
+    .IF al == 'w'
+        invoke SwitchButtonState2
+        pop eax
+        loop Buttons2
+    .ELSEIF al == 's'
+        invoke SwitchButtonState2
+        pop eax
+        loop Buttons2
+    .ELSEIF al == ' '
+        .IF ButtonReplay_State == 1
+            pop eax
+            jmp start
+        .ELSEIF ButtonExit2_State == 1
+            exit
+        .ENDIF
+    .ENDIF
+    loop buttons2
     exit
 main ENDP
 
